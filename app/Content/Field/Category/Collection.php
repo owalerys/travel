@@ -13,11 +13,19 @@ use App\Content\Field\Category;
 
 class Collection extends \App\Content\Base\Collection
 {
-
+    /**
+     * Collection constructor.
+     * @param $config
+     * @throws \Exception
+     */
     public function __construct($config)
     {
         foreach ($config as $slug => $category) {
-            $this->push(new Category($category));
+            $new = new Category($category);
+
+            $new->validateSlug($slug);
+
+            $this->push($new);
         }
     }
 

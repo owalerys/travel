@@ -9,20 +9,26 @@
 namespace App\Content\Field;
 
 
-class Category
+use App\Content\Base\Entity;
+
+class Category extends Entity
 {
     private $title;
-
-    private $slug;
 
     private $isEndCategory = true;
 
     private $categories;
 
+    private $atLeastOne = false;
+
     public function __construct($config)
     {
         $this->setTitle($config['title']);
         $this->setSlug($config['slug']);
+
+        if (!empty($config['at_least_one'])) {
+            $this->setAtLeastOne($config['at_least_one']);
+        }
 
         if (!empty($config['categories'])) {
             $this->setIsEndCategory(false);
@@ -38,11 +44,6 @@ class Category
         $this->title = $title;
     }
 
-    private function setSlug(string $slug)
-    {
-        $this->slug = $slug;
-    }
-
     private function setIsEndCategory(bool $isEndCategory)
     {
         $this->isEndCategory = $isEndCategory;
@@ -51,5 +52,10 @@ class Category
     private function setCategories(Category\Collection $categories)
     {
         $this->categories = $categories;
+    }
+
+    private function setAtLeastOne(bool $atLeastOne)
+    {
+        $this->atLeastOne = $atLeastOne;
     }
 }

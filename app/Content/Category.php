@@ -9,14 +9,13 @@
 namespace App\Content;
 
 
-class Category
+use App\Content\Base\Entity;
+
+class Category extends Entity
 {
 
     /** @var string */
     private $title;
-
-    /** @var string */
-    private $slug;
 
     /** @var array|string */
     private $type = ['content', 'link'];
@@ -68,11 +67,6 @@ class Category
     private function setTitle(string $title)
     {
         $this->title = $title;
-    }
-
-    private function setSlug(string $slug)
-    {
-        $this->slug = $slug;
     }
 
     /**

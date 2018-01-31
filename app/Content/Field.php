@@ -17,9 +17,6 @@ class Field extends Entity
     private $title;
 
     /** @var string */
-    private $slug;
-
-    /** @var string */
     private $filter;
 
     /** @var bool */
@@ -27,6 +24,9 @@ class Field extends Entity
 
     /** @var bool */
     private $customTitle = false;
+
+    /** @var bool */
+    private $customSubHeading = false;
 
     /** @var bool */
     private $required = true;
@@ -48,6 +48,9 @@ class Field extends Entity
         if (!empty($config['custom_title'])) {
             $this->setCustomTitle($config['custom_title']);
         }
+        if (!empty($config['custom_sub_heading'])) {
+            $this->setCustomSubHeading($config['custom_sub_heading']);
+        }
         if (!empty($config['required'])) {
             $this->setRequired($config['required']);
         }
@@ -66,11 +69,6 @@ class Field extends Entity
         $this->title = $title;
     }
 
-    private function setSlug(string $slug)
-    {
-        $this->slug = $slug;
-    }
-
     private function setFilter(string $filter)
     {
         $this->filter = $filter;
@@ -84,6 +82,11 @@ class Field extends Entity
     private function setCustomTitle(bool $customTitle)
     {
         $this->customTitle = $customTitle;
+    }
+
+    private function setCustomSubHeading(bool $customSubHeading)
+    {
+        $this->customSubHeading = $customSubHeading;
     }
 
     private function setRequired(bool $required)

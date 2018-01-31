@@ -13,10 +13,20 @@ use App\Content\Field;
 
 class Collection extends BaseCollection
 {
-    public function __construct($config)
+
+    /**
+     * Collection constructor.
+     * @param $config
+     * @throws \Exception
+     */
+    public function __construct(array $config)
     {
         foreach ($config as $slug => $field) {
-            $this->push(new Field($field));
+            $new = new Field($field);
+
+            $new->validateSlug($slug);
+
+            $this->push($new);
         }
     }
 }
