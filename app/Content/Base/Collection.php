@@ -11,11 +11,16 @@ namespace App\Content\Base;
 
 abstract class Collection implements \IteratorAggregate, \Countable
 {
+    /**
+     * @var Entity[]
+     */
     protected $collection = [];
 
     protected function push($item)
     {
         array_push($this->collection, $item);
+
+        $this->afterPush($item);
     }
 
     public function getIterator()
@@ -26,5 +31,22 @@ abstract class Collection implements \IteratorAggregate, \Countable
     public function count()
     {
         return count($this->collection);
+    }
+
+    protected function afterPush($pushedItem)
+    {
+        // placeholder
+    }
+
+    public function getSlugsArray()
+    {
+        $slugs = [];
+
+        foreach ($this->collection as $item)
+        {
+            $slugs[] = $item->getSlug();
+        }
+
+        return $slugs;
     }
 }

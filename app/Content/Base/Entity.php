@@ -31,4 +31,12 @@ abstract class Entity
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
 }

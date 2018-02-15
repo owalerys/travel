@@ -9,6 +9,7 @@
 namespace App\Content\Category;
 
 use \App\Content\Base\Collection as BaseCollection;
+use App\Content\Category;
 
 class Collection extends BaseCollection
 {
@@ -26,5 +27,31 @@ class Collection extends BaseCollection
 
             $this->push($new);
         }
+    }
+
+    public function getSlugsArray()
+    {
+        $slugs = [];
+
+        /** @var Category $category */
+        foreach ($this as $category) {
+            $slugs = array_merge($slugs, $category->getSlugsArray());
+        }
+
+        return $slugs;
+    }
+
+    public function getCategoryBySlug(string $slug)
+    {
+        /** @var Category $category */
+        foreach ($this as $category) {
+            $search = $category->getCategoryDefinitionForSlug($slug);
+
+            if ($search instanceof Category) {
+                return $search;
+            }
+        }
+
+        return false;
     }
 }

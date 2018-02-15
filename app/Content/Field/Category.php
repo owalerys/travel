@@ -58,4 +58,9 @@ class Category extends Entity
     {
         $this->atLeastOne = $atLeastOne;
     }
+
+    public function isAtLeastOne()
+    {
+        return $this->atLeastOne;
+    }
 }

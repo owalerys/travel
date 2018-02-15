@@ -104,4 +104,39 @@ class Field extends Entity
         $this->category = $categorySlug;
     }
 
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    public function isRequired()
+    {
+        return (bool) $this->required;
+    }
+
+    public function canMultiple()
+    {
+        return (bool) $this->multiple;
+    }
+
+    public function canCustomTitle()
+    {
+        return (bool) $this->customTitle;
+    }
+
+    public function canCustomSubHeading()
+    {
+        return (bool) $this->customSubHeading;
+    }
+
+    public function canAdditionalInfo()
+    {
+        return (bool) $this->additionalInfo;
+    }
+
 }

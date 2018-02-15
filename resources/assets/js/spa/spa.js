@@ -16,10 +16,9 @@ import router from './router'
 
 // Front-end Vuetify Material framework
 import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.css'
 
 // Integration helpers
-import {sync} from 'vuex-router-sync'
+import { sync } from 'vuex-router-sync'
 import VueAxios from 'vue-axios'
 
 // Install plugins

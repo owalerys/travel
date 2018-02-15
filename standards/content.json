@@ -1,0 +1,83 @@
+{
+  "title": "",
+  "description": "",
+  "url": "",
+  "schema_version": "1",
+  "category_slug": "article_slug",
+  "fields": {
+    "phone_slug": {
+      "custom_title": "",
+      "slug": "phone_slug",
+      "type": "phone",
+      "items": [
+        {
+          /* type - phone */
+          "custom_heading": "",
+          "attributes": {
+            "country_code": ""
+          },
+          "value": "",
+          "additional_info": ""
+        }
+      ]
+    },
+    "email_slug": {
+      "custom_title": "",
+      "slug": "email_slug",
+      "type": "email",
+      "items": [
+        {
+          /* type - email */
+          "custom_heading": "",
+          "attributes": {
+
+          },
+          "value": "",
+          "additional_info": ""
+        }
+      ]
+    },
+    "free_content_slug": {
+      "slug": "free_content_slug",
+      "type": "free_content",
+      "items": [
+        {
+          /* type - free content */
+          "value": ""
+        }
+      ]
+    },
+    "paragraph_slug": {
+      "slug": "paragraph_slug",
+      "type": "paragraph",
+      "custom_title": "",
+      "items": [
+        {
+          /* type - paragraph */
+          "custom_heading": "",
+          "attributes": {
+
+          },
+          "value": "",
+          "additional_info": ""
+        }
+      ]
+    },
+    "url_slug": {
+      "slug": "url_slug",
+      "type": "url",
+      "custom_title": "",
+      "items": [
+        {
+          /* type - url */
+          "custom_heading": "",
+          "attributes": {
+            "display": ""
+          },
+          "value": "",
+          "additional_info": ""
+        }
+      ]
+    }
+  }
+}

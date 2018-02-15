@@ -29,10 +29,10 @@ class Category extends Entity
     /** @var bool */
     private $isEndArticle = false;
 
-    /** @var Field\Collection */
+    /** @var Field\Collection|Field[] */
     private $fields;
 
-    /** @var Field\Category\Collection */
+    /** @var Field\Category\Collection|Field\Category[] */
     private $fieldCategories;
 
     /**
@@ -135,6 +135,53 @@ class Category extends Entity
         } else {
             throw new \Exception('Field must be array or string, given: ' . $input . ' for ' . $this->slug);
         }
+    }
+
+    public function getSlugsArray()
+    {
+        $slugs = [ $this->slug ];
+
+        if ($this->isEndArticle) {
+            return $slugs;
+        } else {
+            return array_merge($slugs, $this->categories->getSlugsArray());
+        }
+    }
+
+    public function getCategoryDefinitionForSlug(string $slug)
+    {
+        if ($this->isEndArticle) {
+            return ($slug === $this->slug) ? $this : false;
+        } else {
+            return $this->categories->getCategoryBySlug($slug);
+        }
+    }
+
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    public function getFieldCategories()
+    {
+        return $this->fieldCategories;
+    }
+
+    public function getFieldCategoriesToFieldsMap()
+    {
+        $map = [];
+
+        foreach ($this->fieldCategories as $fieldCategory) {
+            $map[$fieldCategory->getSlug()] = [];
+        }
+
+        foreach ($this->fields as $field) {
+            if ($field->getCategory()) {
+                $map[$field->getCategory()][] = $field->getSlug();
+            }
+        }
+
+        return $map;
     }
 
 }

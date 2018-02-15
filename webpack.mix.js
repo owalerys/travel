@@ -11,8 +11,14 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
+/**
+ * Single Page Application
+ */
+mix.js('resources/assets/js/spa/spa.js', 'public/js/spa')
+    .sass('resources/assets/sass/spa/spa.scss', 'public/css/spa')
 
-/*mix.styles([
-    'node_modules/vuetify/dist/vuetify.css'
-], 'public/css/app.css')*/
+/**
+ * Non-SPA
+ */
+mix.js('resources/assets/js/front/app.js', 'public/js/front')
+    .sass('resources/assets/sass/front/app.scss', 'public/css/front')

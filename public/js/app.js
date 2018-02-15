@@ -14113,11 +14113,11 @@ module.exports = function spread(callback) {
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 
-var routes = [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_2__components_ExampleComponent___default.a, name: 'test' }];
+var routes = [{ path: '/', redirect: 'kb', name: 'test' }, { path: '/kb', component: __WEBPACK_IMPORTED_MODULE_2__components_ExampleComponent___default.a, name: 'kb' }];
 
 var mode = 'history';
 
-/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({ mode: mode, routes: routes }));
+/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({ mode: mode, routes: routes, base: '/app/' }));
 
 /***/ }),
 /* 38 */
@@ -16923,58 +16923,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
-        return {
-            clipped: true,
-            drawer: true,
-            fixed: true,
-            items: [{
-                icon: 'bubble_chart',
-                title: 'Knowledge Base'
-            }, {
-                icon: 'bubble_chart',
-                title: 'Support'
-            }],
-            right: true,
-            rightDrawer: false,
-            title: 'AgentRef'
-        };
+        return {};
     }
 });
 
@@ -16987,152 +16939,37 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-app",
+    "v-layout",
+    { attrs: { column: "" } },
     [
       _c(
-        "v-navigation-drawer",
-        {
-          attrs: { fixed: "", clipped: true, app: "" },
-          model: {
-            value: _vm.drawer,
-            callback: function($$v) {
-              _vm.drawer = $$v
-            },
-            expression: "drawer"
-          }
-        },
-        [
-          _c(
-            "v-list",
-            _vm._l(_vm.items, function(item, i) {
-              return _c(
-                "v-list-tile",
-                { key: i, attrs: { value: "true", exact: "" } },
-                [
-                  _c(
-                    "v-list-tile-action",
-                    [
-                      _c("v-icon", {
-                        domProps: { innerHTML: _vm._s(item.icon) }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-list-tile-content",
-                    [
-                      _c("v-list-tile-title", {
-                        domProps: { textContent: _vm._s(item.title) }
-                      })
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            })
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-toolbar",
-        {
-          attrs: {
-            fixed: "",
-            app: "",
-            "clipped-left": true,
-            color: "light-blue"
-          }
-        },
-        [
-          _c("v-toolbar-side-icon", {
-            on: {
-              click: function($event) {
-                $event.stopPropagation()
-                _vm.drawer = !_vm.drawer
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("v-toolbar-title", {
-            domProps: { textContent: _vm._s(_vm.title) }
-          }),
-          _vm._v(" "),
-          _c("v-spacer")
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-content",
+        "v-container",
+        { attrs: { fluid: "", "grid-list-md": "" } },
         [
           _c(
             "v-layout",
-            { attrs: { column: "" } },
+            { attrs: { row: "" } },
             [
               _c(
-                "v-container",
-                { attrs: { fluid: "", "grid-list-md": "" } },
+                "v-flex",
+                { attrs: { xs9: "" } },
                 [
                   _c(
-                    "v-layout",
-                    { attrs: { row: "" } },
+                    "v-card",
+                    { attrs: { light: "", color: "white" } },
                     [
                       _c(
-                        "v-flex",
-                        { attrs: { xs9: "" } },
+                        "v-toolbar",
+                        { attrs: { flat: "", color: "white" } },
                         [
                           _c(
-                            "v-card",
-                            { attrs: { light: "", color: "white" } },
+                            "v-btn",
+                            { attrs: { flat: "", color: "primary", dark: "" } },
                             [
-                              _c(
-                                "v-toolbar",
-                                { attrs: { flat: "", color: "white" } },
-                                [
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        flat: "",
-                                        color: "primary",
-                                        dark: ""
-                                      }
-                                    },
-                                    [
-                                      _c(
-                                        "v-icon",
-                                        { attrs: { left: "", dark: "" } },
-                                        [_vm._v("chevron_left")]
-                                      ),
-                                      _vm._v(
-                                        " Back\n                                "
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("v-card-title", [
-                                _c("h1", [
-                                  _vm._v("Air Canada - Schedule Changes")
-                                ])
+                              _c("v-icon", { attrs: { left: "", dark: "" } }, [
+                                _vm._v("chevron_left")
                               ]),
-                              _vm._v(" "),
-                              _c("v-card-text", [
-                                _c("h2", [_vm._v("Section")]),
-                                _vm._v(" "),
-                                _c("p", [_vm._v("Lorem ipsum dolor sit amet")]),
-                                _vm._v(" "),
-                                _c("h2", [_vm._v("Section")]),
-                                _vm._v(" "),
-                                _c("p", [_vm._v("Lorem ipsum dolor sit amet")])
-                              ])
+                              _vm._v(" Back\n                        ")
                             ],
                             1
                           )
@@ -17140,152 +16977,148 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
+                      _c("v-card-title", [
+                        _c("h1", [_vm._v("Air Canada - Schedule Changes")])
+                      ]),
+                      _vm._v(" "),
+                      _c("v-card-text", [
+                        _c("h2", [_vm._v("Section")]),
+                        _vm._v(" "),
+                        _c("p", [_vm._v("Lorem ipsum dolor sit amet")]),
+                        _vm._v(" "),
+                        _c("h2", [_vm._v("Section")]),
+                        _vm._v(" "),
+                        _c("p", [_vm._v("Lorem ipsum dolor sit amet")])
+                      ])
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-flex",
+                { attrs: { xs3: "" } },
+                [
+                  _c(
+                    "v-card",
+                    [
+                      _c("v-card-title", { attrs: { "primary-title": "" } }, [
+                        _c("h2", [_vm._v("Supporting PDFs")])
+                      ]),
+                      _vm._v(" "),
                       _c(
-                        "v-flex",
-                        { attrs: { xs3: "" } },
+                        "v-list",
+                        { attrs: { "two-line": "" } },
                         [
                           _c(
-                            "v-card",
+                            "v-list-tile",
+                            { on: { click: function($event) {} } },
                             [
                               _c(
-                                "v-card-title",
-                                { attrs: { "primary-title": "" } },
-                                [_c("h2", [_vm._v("Supporting PDFs")])]
+                                "v-list-tile-action",
+                                [_c("v-icon", [_vm._v("picture_as_pdf")])],
+                                1
                               ),
                               _vm._v(" "),
                               _c(
-                                "v-list",
-                                { attrs: { "two-line": "" } },
+                                "v-list-tile-content",
                                 [
-                                  _c(
-                                    "v-list-tile",
-                                    { on: { click: function($event) {} } },
-                                    [
-                                      _c(
-                                        "v-list-tile-action",
-                                        [
-                                          _c("v-icon", [
-                                            _vm._v("picture_as_pdf")
-                                          ])
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-list-tile-content",
-                                        [
-                                          _c("v-list-tile-title", [
-                                            _vm._v("Domestic Doc")
-                                          ]),
-                                          _vm._v(" "),
-                                          _c("v-list-tile-sub-title", [
-                                            _vm._v("PDF Description...")
-                                          ])
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  ),
+                                  _c("v-list-tile-title", [
+                                    _vm._v("Domestic Doc")
+                                  ]),
                                   _vm._v(" "),
-                                  _c("v-divider"),
+                                  _c("v-list-tile-sub-title", [
+                                    _vm._v("PDF Description...")
+                                  ])
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("v-divider"),
+                          _vm._v(" "),
+                          _c(
+                            "v-list-tile",
+                            { on: { click: function($event) {} } },
+                            [
+                              _c(
+                                "v-list-tile-action",
+                                [_c("v-icon", [_vm._v("picture_as_pdf")])],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-list-tile-content",
+                                [
+                                  _c("v-list-tile-title", [
+                                    _vm._v("International Doc")
+                                  ]),
                                   _vm._v(" "),
-                                  _c(
-                                    "v-list-tile",
-                                    { on: { click: function($event) {} } },
-                                    [
-                                      _c(
-                                        "v-list-tile-action",
-                                        [
-                                          _c("v-icon", [
-                                            _vm._v("picture_as_pdf")
-                                          ])
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-list-tile-content",
-                                        [
-                                          _c("v-list-tile-title", [
-                                            _vm._v("International Doc")
-                                          ]),
-                                          _vm._v(" "),
-                                          _c("v-list-tile-sub-title", [
-                                            _vm._v("PDF Description...")
-                                          ])
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  ),
+                                  _c("v-list-tile-sub-title", [
+                                    _vm._v("PDF Description...")
+                                  ])
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("v-divider"),
+                          _vm._v(" "),
+                          _c(
+                            "v-list-tile",
+                            { on: { click: function($event) {} } },
+                            [
+                              _c(
+                                "v-list-tile-action",
+                                [_c("v-icon", [_vm._v("picture_as_pdf")])],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-list-tile-content",
+                                [
+                                  _c("v-list-tile-title", [
+                                    _vm._v("Transatlantic Doc")
+                                  ]),
                                   _vm._v(" "),
-                                  _c("v-divider"),
+                                  _c("v-list-tile-sub-title", [
+                                    _vm._v("PDF Description...")
+                                  ])
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("v-divider"),
+                          _vm._v(" "),
+                          _c(
+                            "v-list-tile",
+                            { on: { click: function($event) {} } },
+                            [
+                              _c(
+                                "v-list-tile-action",
+                                [_c("v-icon", [_vm._v("picture_as_pdf")])],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-list-tile-content",
+                                [
+                                  _c("v-list-tile-title", [
+                                    _vm._v("Transpacific Doc")
+                                  ]),
                                   _vm._v(" "),
-                                  _c(
-                                    "v-list-tile",
-                                    { on: { click: function($event) {} } },
-                                    [
-                                      _c(
-                                        "v-list-tile-action",
-                                        [
-                                          _c("v-icon", [
-                                            _vm._v("picture_as_pdf")
-                                          ])
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-list-tile-content",
-                                        [
-                                          _c("v-list-tile-title", [
-                                            _vm._v("Transatlantic Doc")
-                                          ]),
-                                          _vm._v(" "),
-                                          _c("v-list-tile-sub-title", [
-                                            _vm._v("PDF Description...")
-                                          ])
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-divider"),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-list-tile",
-                                    { on: { click: function($event) {} } },
-                                    [
-                                      _c(
-                                        "v-list-tile-action",
-                                        [
-                                          _c("v-icon", [
-                                            _vm._v("picture_as_pdf")
-                                          ])
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-list-tile-content",
-                                        [
-                                          _c("v-list-tile-title", [
-                                            _vm._v("Transpacific Doc")
-                                          ]),
-                                          _vm._v(" "),
-                                          _c("v-list-tile-sub-title", [
-                                            _vm._v("PDF Description...")
-                                          ])
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  )
+                                  _c("v-list-tile-sub-title", [
+                                    _vm._v("PDF Description...")
+                                  ])
                                 ],
                                 1
                               )
@@ -17306,11 +17139,7 @@ var render = function() {
           )
         ],
         1
-      ),
-      _vm._v(" "),
-      _c("v-footer", { attrs: { fixed: true, app: "" } }, [
-        _c("span", [_vm._v("© 2018")])
-      ])
+      )
     ],
     1
   )
@@ -35066,11 +34895,58 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            hello: 'world'
+            clipped: true,
+            drawer: false,
+            fixed: true,
+            items: [{
+                icon: 'bubble_chart',
+                title: 'Knowledge Base',
+                path: '/kb'
+            }, {
+                icon: 'bubble_chart',
+                title: 'Content Management',
+                path: '/content'
+            }],
+            right: true,
+            rightDrawer: false,
+            title: 'AgentRef'
         };
     }
 });
@@ -35083,7 +34959,97 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_c("router-view")], 1)
+  return _c(
+    "v-app",
+    [
+      _c(
+        "v-navigation-drawer",
+        {
+          attrs: { fixed: "", clipped: true, app: "" },
+          model: {
+            value: _vm.drawer,
+            callback: function($$v) {
+              _vm.drawer = $$v
+            },
+            expression: "drawer"
+          }
+        },
+        [
+          _c(
+            "v-list",
+            _vm._l(_vm.items, function(item, i) {
+              return _c(
+                "v-list-tile",
+                {
+                  key: i,
+                  attrs: { value: "true", to: item.path, replace: true }
+                },
+                [
+                  _c(
+                    "v-list-tile-action",
+                    [
+                      _c("v-icon", {
+                        domProps: { innerHTML: _vm._s(item.icon) }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-list-tile-content",
+                    [
+                      _c("v-list-tile-title", {
+                        domProps: { textContent: _vm._s(item.title) }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            })
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-toolbar",
+        {
+          attrs: {
+            fixed: "",
+            app: "",
+            "clipped-left": true,
+            color: "light-blue"
+          }
+        },
+        [
+          _c("v-toolbar-side-icon", {
+            on: {
+              click: function($event) {
+                $event.stopPropagation()
+                _vm.drawer = !_vm.drawer
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("v-toolbar-title", {
+            domProps: { textContent: _vm._s(_vm.title) }
+          }),
+          _vm._v(" "),
+          _c("v-spacer")
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("v-content", [_c("router-view")], 1),
+      _vm._v(" "),
+      _c("v-footer", { attrs: { fixed: true, app: "" } }, [
+        _c("span", [_vm._v("© 2018")])
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
