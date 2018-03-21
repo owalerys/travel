@@ -11,7 +11,7 @@ return [
                     'title' => 'Airline Contact Information',
                     'slug' => 'airline_contact',
                     'association' => 'airline',
-                    'type' => ['content', 'link'],
+                    'type' => 'content',
                     'accept_new_submissions' => true,
                     'fields' => [
                         'email_agency' => [
