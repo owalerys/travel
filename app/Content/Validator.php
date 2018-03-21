@@ -8,58 +8,35 @@
 
 namespace App\Content;
 
-
-use App\Services\ContentValidationService;
-
 class Validator
 {
 
     /**
-     * @var ContentValidationService
+     * @param $attribute string
+     * @param $parameters array
+     * @param $value mixed
+     * @param $validator \Illuminate\Contracts\Validation\Validator
+     * @return bool
      */
-    protected $contentValidationService;
-
-    public function __construct(ContentValidationService $contentValidationService)
+    public function ruleArraySize($attribute, $parameters, $value, $validator)
     {
-        $this->contentValidationService = $contentValidationService;
+        if (is_array($value) === false) {
+            return true;
+        } else {
+            return count($value) <= $parameters[0];
+        }
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param array $parameters
-     * @param \Illuminate\Contracts\Validation\Validator $validator
-     * @throws \Exception
+     * @param $message string
+     * @param $attribute string
+     * @param $rule string
+     * @param $parameters array
+     * @return string
      */
-    public function content($attribute, $value, $parameters, $validator)
+    public function replacerArraySize($message, $attribute, $rule, $parameters)
     {
-        if (in_array($parameters[0], ['hard', 'soft']) === false) {
-            throw new \Exception('Content validation attribute required, not valid: \'' . $attribute . '\'');
-        }
-
-        $strictValidation = true;
-        if ($parameters[0] === 'soft') {
-            $strictValidation = false;
-        }
-
-        $this->contentValidationService->setFieldPrefix($attribute);
-
-        if ($strictValidation) {
-            $result = $this->contentValidationService->hardValidation($value);
-        } else {
-            $result = $this->contentValidationService->softValidation($value);
-        }
-
-        $extendedMessageBag = $this->contentValidationService->getMessageBag();
-
-        $validator->after(function ($validator) use ($result, $extendedMessageBag) {
-            if ($result) {
-                /** @var $validator \Illuminate\Contracts\Validation\Validator */
-                $validator->getMessageBag()->merge($extendedMessageBag);
-            }
-        });
-
-        return $result;
+        return str_replace(':array_size', $parameters[0], $message);
     }
 
 }

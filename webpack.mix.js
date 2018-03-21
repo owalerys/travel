@@ -1,4 +1,5 @@
 let mix = require('laravel-mix');
+let path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -12,6 +13,18 @@ let mix = require('laravel-mix');
  */
 
 /**
+ * Custom webpack config
+ */
+mix.webpackConfig({
+    resolve: {
+        alias: {
+            Travel: path.resolve(__dirname, 'resources/assets/js/spa')
+        },
+        extensions: ['.js', '.vue']
+    }
+});
+
+/**
  * Single Page Application
  */
 mix.js('resources/assets/js/spa/spa.js', 'public/js/spa')
@@ -22,3 +35,10 @@ mix.js('resources/assets/js/spa/spa.js', 'public/js/spa')
  */
 mix.js('resources/assets/js/front/app.js', 'public/js/front')
     .sass('resources/assets/sass/front/app.scss', 'public/css/front')
+
+/**
+ * Production Cache-Busting
+ */
+if (mix.inProduction()) {
+    mix.version()
+}

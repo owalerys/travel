@@ -17,6 +17,7 @@ class InitialContentStructure extends Migration
             $table->increments('id');
             $table->string('iata_code', 2)->nullable();
             $table->string('icao_code', 3)->nullable();
+            $table->string('accounting_code', 3)->nullable();
             $table->string('name', 255);
             $table->string('country_code', 2)->nullable();
             $table->boolean('active')->default(true);
@@ -35,6 +36,7 @@ class InitialContentStructure extends Migration
             $table->string('schema_version');
             $table->string('display_title', 255)->nullable();
             $table->text('display_description')->nullable();
+            $table->string('type');
             $table->unsignedInteger('latest_version_id')->nullable();
             $table->boolean('active')->default(true);
             $table->boolean('live')->default(false);
@@ -53,13 +55,28 @@ class InitialContentStructure extends Migration
             $table->unsignedInteger('parent_id')->nullable();
             $table->string('title', 255)->nullable();
             $table->text('description')->nullable();
+            $table->string('type');
             $table->string('url', 2000)->nullable();
-            $table->string('status', 32)->default('new');
+            $table->string('status', 32)->default(\App\ArticleVersion::STATUS_EDITING);
             $table->json('content')->nullable();
             $table->unsignedInteger('version')->default(1);
             $table->string('schema_version');
             $table->string('category_slug');
             $table->unsignedInteger('author_id')->nullable();
+
+            // date the version was created
+            $table->dateTime('create_date')->nullable();
+            // date the version is submitted for review
+            $table->dateTime('submission_date')->nullable();
+            // date the version has completed review (either failure or approval)
+            $table->dateTime('review_date')->nullable();
+            // date the version went live
+            $table->dateTime('live_date')->nullable();
+            // date the version was retired
+            $table->dateTime('retire_date')->nullable();
+            // date the post should automatically retire
+            $table->dateTime('auto_retire_date')->nullable();
+
             $table->timestamps();
 
             $table->index('category_slug');

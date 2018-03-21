@@ -29,6 +29,9 @@ class Category extends Entity
     /** @var bool */
     private $isEndArticle = false;
 
+    /** @var bool */
+    private $acceptNewSubmissions = false;
+
     /** @var Field\Collection|Field[] */
     private $fields;
 
@@ -55,6 +58,10 @@ class Category extends Entity
             $this->setFields(new Field\Collection($config['fields']));
 
             $this->setFieldCategories(new Field\Category\Collection($config['field_categories']));
+
+            if (isset($config['accept_new_submissions'])) {
+                $this->setAcceptNewSubmissions($config['accept_new_submissions']);
+            }
         } else {
             $this->setIsEndArticle(false);
 
@@ -99,6 +106,11 @@ class Category extends Entity
     private function setIsEndArticle(bool $isEndArticle)
     {
         $this->isEndArticle = $isEndArticle;
+    }
+
+    private function setAcceptNewSubmissions(bool $acceptNewSubmissions)
+    {
+        $this->acceptNewSubmissions = $acceptNewSubmissions;
     }
 
     private function setFields(Field\Collection $fields)
@@ -182,6 +194,33 @@ class Category extends Entity
         }
 
         return $map;
+    }
+
+    public function isContentOnly()
+    {
+        return $this->type === 'content';
+    }
+
+    public function isLinkOnly()
+    {
+        return $this->type === 'link';
+    }
+
+    public function canContentOrLink()
+    {
+        return is_array($this->type) && in_array('content', $this->type) && in_array('link', $this->type);
+    }
+
+    /**
+     * @return array
+     */
+    public function getTypeArray()
+    {
+        if (is_string($this->type) === true) {
+            return [$this->type];
+        } else {
+            return $this->type;
+        }
     }
 
 }

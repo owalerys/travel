@@ -31,17 +31,6 @@ class Collection extends \App\Content\Base\Collection
         }
     }
 
-    public function getSlugsArray(string $version)
-    {
-        $schema = $this->getSchemaByVersion($version);
-
-        if ($schema === false) {
-            return [];
-        }
-
-        return $schema->getCategories()->getSlugsArray();
-    }
-
     public function getVersionsArray()
     {
         $versions = [];

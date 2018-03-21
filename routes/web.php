@@ -26,9 +26,15 @@ Route::middleware(['auth'])->group(function () {
      */
     Route::prefix('app')->group(function () {
         // app delivery view
-        Route::get('{catchall?}', function () {
-            return response()->view('spa.app');
-        })->where('catchall', '(.*)')->name('spa');
+        Route::get('/{catchall?}', 'SpaController@index')->where('catchall', '(.*)')->name('spa');
+    });
+
+    /**
+     * Profile endpoints
+     */
+    Route::prefix('profile')->group(function () {
+        Route::get('/', 'ProfileController@show');
+        Route::get('/permissions', 'ProfileController@permissions');
     });
 
     /**
@@ -43,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Airlines
         Route::prefix('airlines')->group(function () {
-            Route::get('/', 'ContentController@contentAirlines');
+            Route::get('/', 'ContentController@airlines');
             Route::get('/active', 'ContentController@activeAirlines');
         });
 
@@ -51,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('articles')->group(function () {
             Route::get('/', 'ContentController@articles');
             Route::get('/live', 'ContentController@liveArticles');
-            Route::get('/active', 'ContentController@activeArticles');
+            Route::post('/active', 'ContentController@activeArticles');
         });
 
         Route::prefix('countries')->group(function () {
@@ -98,3 +104,7 @@ Route::middleware(['auth'])->group(function () {
 
 Auth::routes();
 Route::get('/logout', 'Auth\LoginController@logout');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

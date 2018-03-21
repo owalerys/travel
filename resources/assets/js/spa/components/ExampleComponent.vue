@@ -1,7 +1,7 @@
 <template>
     <v-layout column>
-        <v-container fluid grid-list-md>
-            <v-layout row>
+        <v-container fluid grid-list-xl>
+            <v-layout row wrap>
                 <v-flex xs9>
                     <v-card light color="white">
                         <v-toolbar flat color="white">

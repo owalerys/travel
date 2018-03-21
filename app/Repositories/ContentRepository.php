@@ -28,9 +28,20 @@ class ContentRepository extends Repository
         return $liveArticles = Article::where('live', '=', '1')->get();
     }
 
-    public function getActiveArticles()
+    public function getActiveArticles($airlineId = null)
     {
-        return $activeArticles = Article::where('active', '=', '1')->get();
+        $activeArticles = Article::where('active', '=', '1');
+
+        if ($airlineId) {
+            $activeArticles->where('topic_id', '=', $airlineId);
+            $activeArticles->where('topic_type', '=', 'airlines');
+
+            /*$activeArticles->whereHas('topic', function ($query) use ($airlineId) {
+                $query->where('id', '=', $airlineId);
+            });*/
+        }
+
+        return $activeArticles->get();
     }
 
     public function getArticles()

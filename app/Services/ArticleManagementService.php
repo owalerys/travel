@@ -13,6 +13,7 @@ use App\Airline;
 use App\Article;
 use App\Contracts\Topical;
 use App\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class ArticleManagementService
 {
@@ -23,19 +24,23 @@ class ArticleManagementService
     }
 
     /**
-     * @param string $title
+     * @param string|null $title
      * @param string $categorySlug
+     * @param string $schemaVersion
+     * @param string $type
      * @param Topical|null $subject
      * @param string|null $description
      * @return Article
      */
-    protected function createNewArticle(string $title, string $categorySlug, Topical $subject = null, string $description = null)
+    protected function createNewArticle(string $title = null, string $categorySlug, string $schemaVersion, string $type, Topical $subject = null, string $description = null)
     {
-        $article = new Article([
-            'article' => $title,
-            'category_slug' => $categorySlug,
-            'description' => $description
-        ]);
+        $article = new Article;
+
+        $article->category_slug = $categorySlug;
+        $article->display_description = $description;
+        $article->display_title = $title;
+        $article->type = $type;
+        $article->schema_version = $schemaVersion;
 
         if ($subject) {
             $article->topic()->associate($subject);
@@ -47,27 +52,23 @@ class ArticleManagementService
     }
 
     /**
-     * @param Article $article
-     * @return $this|\App\ArticleVersion
-     */
-    protected function createFirstVersion(Article $article)
-    {
-        return $article->createFirstVersion();
-    }
-
-    /**
      * @param string $title
      * @param string $categorySlug
-     * @param User $user
+     * @param string $version
+     * @param string $type
+     * @param string|null $url
+     * @param Authenticatable $user
      * @param Topical|null $subject
      * @param string|null $description
      * @return Article
      */
-    public function createNewArticleWithFirstVersion(string $title, string $categorySlug, User $user, Topical $subject = null, string $description = null)
+    public function createNewArticleWithFirstVersion(string $title, string $categorySlug, string $version, string $type, string $url = null, Authenticatable $user, Topical $subject = null, string $description = null)
     {
-        $article = $this->createNewArticle($title, $categorySlug, $subject, $description);
+        $article = $this->createNewArticle($title, $categorySlug, $version, $type, $subject, $description);
 
-        $version = $this->createFirstVersion($article);
+        $version = $article->createFirstVersion([
+            'url' => $url
+        ]);
 
         $version->author()->associate($user);
 

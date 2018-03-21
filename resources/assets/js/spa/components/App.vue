@@ -31,16 +31,18 @@
                 <v-icon>lock</v-icon>
             </v-btn>
         </v-toolbar>
-        <v-content>
+        <v-content fluid>
             <router-view></router-view>
         </v-content>
         <v-footer :fixed="true" app>
-            <span>&copy; 2018</span>
+            <span>&copy; 2018 <strong>AgentRef</strong>.com</span>
         </v-footer>
     </v-app>
 </template>
 
 <script>
+    import { mapActions, mapGetters } from 'vuex'
+
     export default {
         data () {
             return {
@@ -49,20 +51,45 @@
                 fixed: true,
                 items: [
                     {
-                        icon: 'bubble_chart',
+                        icon: 'library_books',
                         title: 'Knowledge Base',
                         path: '/kb'
                     },
                     {
-                        icon: 'bubble_chart',
-                        title: 'Content Management',
-                        path: '/content'
+                        icon: 'search',
+                        title: 'Search',
+                        path: '/search'
+                    },
+                    {
+                        icon: 'mode_edit',
+                        title: 'Content Manager',
+                        path: '/content/manage'
                     }
                 ],
                 right: true,
                 rightDrawer: false,
                 title: 'AgentRef'
             }
+        },
+        methods: {
+            ...mapActions({
+                loadPermissions: 'auth/permissions',
+                syncContent: 'content/syncContent',
+            }),
+            doFetches () {
+                this.loadPermissions()
+                this.syncContent()
+            }
+        },
+        computed: {
+            ...mapGetters({
+                hasPermission: 'auth/hasPermission',
+                hasRole: 'auth/hasRole',
+                authenticated: 'auth/authenticated'
+            })
+        },
+        mounted () {
+            this.doFetches()
         }
     }
 </script>

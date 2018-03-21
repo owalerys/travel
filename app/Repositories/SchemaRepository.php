@@ -31,7 +31,8 @@ class SchemaRepository
     }
 
     /**
-     * @return array
+     * @param $version string
+     * @return string[]
      */
     public function getSlugsArray(string $version)
     {
@@ -44,11 +45,19 @@ class SchemaRepository
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getVersionsArray()
     {
         return $this->parseContent()->getVersionsArray();
     }
 
+    /**
+     * @param string $version
+     * @param string $slug
+     * @return \App\Content\Category|false
+     */
     public function getCategoryBySlug(string $version, string $slug)
     {
         $schema = $this->parseContent()->getSchemaByVersion($version);

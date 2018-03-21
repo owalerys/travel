@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Airline;
 use App\Repositories\ContentRepository;
 use App\Repositories\SchemaRepository;
 use Illuminate\Http\Request;
@@ -13,7 +14,9 @@ class ContentController extends Controller
 
     public function schema(SchemaRepository $schemaRepository)
     {
-        return response()->json($schemaRepository->getSchema());
+        return response()->json([
+            'schemas' => $schemaRepository->getSchema()
+        ]);
     }
 
     public function contentAirlines(ContentRepository $contentRepository)
@@ -31,19 +34,30 @@ class ContentController extends Controller
         return response()->json($contentRepository->getLiveArticles());
     }
 
+    public function airlines(ContentRepository $contentRepository)
+    {
+        return response()->json(['airlines' => Airline::all()]);
+    }
+
     public function articles(ContentRepository $contentRepository)
     {
         return response()->json($contentRepository->getArticles());
     }
 
-    public function activeArticles(ContentRepository $contentRepository)
+    public function activeArticles(ContentRepository $contentRepository, Request $request)
     {
-        return response()->json($contentRepository->getActiveArticles());
+        $request->validate([
+            'airline_id' => 'required|exists:airlines,id'
+        ]);
+
+        return response()->json($contentRepository->getActiveArticles($request->input('airline_id')));
     }
 
     public function countries()
     {
-        return response()->json(Country::all());
+        return response()->json([
+            'countries' => Country::all()
+        ]);
     }
 
 }

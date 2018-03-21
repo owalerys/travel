@@ -14,6 +14,12 @@ use App\Content\Schema;
 use App\Repositories\SchemaRepository;
 use Illuminate\Validation\Rule;
 
+/**
+ * Generate the Laravel Validator rules to validate article content based on the given schema
+ *
+ * Class ValidationRulesService
+ * @package App\Services
+ */
 class ValidationRulesService
 {
 
@@ -57,6 +63,10 @@ class ValidationRulesService
      */
     protected $fieldCategoryMap = [];
 
+    /**
+     * ValidationRulesService constructor.
+     * @param SchemaRepository $schemaRepository
+     */
     public function __construct(SchemaRepository $schemaRepository)
     {
         $this->schemaRepository = $schemaRepository;
@@ -69,6 +79,8 @@ class ValidationRulesService
      */
     public function getContentRules(array $input, string $prefix = 'content', bool $strict = true)
     {
+        $this->strict = $strict;
+
         $this->setInput($input);
 
         $this->setPrefix($prefix);
@@ -77,21 +89,32 @@ class ValidationRulesService
             return $this->getRules();
         }
 
+        $this->runTopContentAttributes();
+
         $this->runCategoryRules();
 
         return $this->getRules();
     }
 
+    /**
+     * @param array $input
+     */
     protected function setInput(array $input)
     {
         $this->input = $input;
     }
 
+    /**
+     * @param string $prefix
+     */
     protected function setPrefix(string $prefix)
     {
         $this->prefix = $prefix;
     }
 
+    /**
+     * @param bool $strict
+     */
     protected function setStrict(bool $strict)
     {
         $this->strict = $strict;
@@ -134,9 +157,25 @@ class ValidationRulesService
         return true;
     }
 
+    protected function runTopContentAttributes()
+    {
+        $this->setRule('title', ['string', 'max:255', 'nullable']);
+        $this->setRule('description', ['string', 'nullable']);
+
+        $this->setRule('type', ['required', 'string', Rule::in($this->category->getTypeArray())]);
+
+        if ($this->category->isLinkOnly()) {
+            $this->setRule('url', ['url', 'string', 'required']);
+        } else {
+            $this->setRule('url', ['url', 'string', 'nullable']);
+        }
+    }
+
     /**
      * Read through the given category's field definitions to convert them into
      * Laravel Validator-compatible rules
+     *
+     * Not proud of this function, but it'll work, so time to move on. Can revisit later
      *
      * @return void
      */
@@ -144,19 +183,28 @@ class ValidationRulesService
     {
         $this->fieldCategoryMap = $this->category->getFieldCategoriesToFieldsMap();
 
-        // only valid field types can be used
+        // Don't generate field definitions if fields don't exist
+        if ($this->category->getFields()->count() === 0 || $this->category->isLinkOnly()) {
+            return;
+        }
+
+        /** VALIDATE ALL FIELD SLUGS FOR CATEGORY */
         $this->setRule('fields.*.slug', ['string', 'required', Rule::in($this->category->getFields()->getSlugsArray())]);
 
-        // require each items list to be an array
+        /** ITEMS MUST BE ARRAY, CAN BE EMPTY */
         $this->setRule('fields.*.items', ['array']);
+
+        /** OPTIONAL TEXT FIELDS */
+        $this->setRule('fields.*.custom_title', ['string', 'nullable']);
+        $this->setRule('fields.*.items.*.custom_heading', ['string', 'nullable']);
+        $this->setRule('fields.*.items.*.additional_info', ['string', 'nullable']);
 
         foreach ($this->category->getFields() as $field) {
             $fieldKey = 'fields.' . $field->getSlug() . '.items.*.value';
             $ruleArray = [];
 
+            /** REQUIRED OR AT LEAST ONE */
             if ($this->strict) {
-                // make sure field required rule is respected
-                // or make sure field category at least one rule is respected
                 if ($field->isRequired()) {
                     $ruleArray[] = 'required';
                 } elseif ($this->category->getFieldCategories()->isAtLeastOne($field->getCategory()) === true) {
@@ -164,7 +212,16 @@ class ValidationRulesService
                     array_forget($siblingFields, [array_search($field->getSlug(), $siblingFields)]);
 
                     $ruleArray[] = 'required_without_all:' . implode(',', $siblingFields);
+                } else {
+                    $ruleArray[] = 'nullable';
                 }
+            } else {
+                $ruleArray[] = 'nullable';
+            }
+
+            /** MULTIPLE RULE */
+            if ($field->canMultiple() !== true) {
+                $this->setRule('fields.' . $field->getSlug() . '.items', ['array_size:1']);
             }
 
             switch ($field->getFilter()) {
@@ -217,7 +274,7 @@ class ValidationRulesService
                 return null;
             }
 
-            $search = $search[$index];
+            $search = $search[$keyTree[$index]];
 
             $index++;
         }
@@ -225,11 +282,20 @@ class ValidationRulesService
         return $search;
     }
 
+    /**
+     * @return array
+     */
     protected function getRules()
     {
         return $this->rules;
     }
 
+    /**
+     * Build the fully-qualified field key
+     *
+     * @param string $fieldKey
+     * @return string
+     */
     protected function getFullFieldKey(string $fieldKey)
     {
         if ($this->prefix) {
@@ -239,9 +305,19 @@ class ValidationRulesService
         return $fieldKey;
     }
 
+    /**
+     * Add new rules for a given key
+     *
+     * @param string $fieldKey
+     * @param array $rule
+     */
     protected function setRule(string $fieldKey, array $rule)
     {
         $newKey = $this->getFullFieldKey($fieldKey);
+
+        if (isset($this->rules[$newKey]) && is_array($this->rules[$newKey]) === true) {
+            $rule = array_merge($rule, $this->rules[$newKey]);
+        }
 
         $this->rules[$newKey] = $rule;
     }
