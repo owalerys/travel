@@ -41,7 +41,8 @@ class LoadPermissions extends Command
         $this->warn('Running Permission Seeder');
 
         Artisan::call('db:seed', [
-            '--class' => \PermissionSeeder::class
+            '--class' => \PermissionSeeder::class,
+            '--force' => ''
         ]);
 
         $this->info('Seeding Complete');
