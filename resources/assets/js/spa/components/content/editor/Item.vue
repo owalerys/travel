@@ -74,7 +74,7 @@
             },
             subHeading: {
                 get () {
-                    return this.getItem(this.index, this.slug).sub_heading
+                    return this.getItem(this.index, this.slug).custom_heading
                 },
                 set (value) {
                     return this.updateSubHeading({ slug: this.slug, key: this.index, sub_heading: value })
