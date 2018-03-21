@@ -58,17 +58,17 @@
                                            :to="{ name: 'version-editor', params: { article_id: props.item.article_id, version: props.item.version } }"
                                     ><v-icon>mode_edit</v-icon></v-btn>
                                     <!-- Done -->
-                                    <v-btn flat icon color="grey"><v-icon>done</v-icon></v-btn>
+                                    <!--<v-btn flat icon color="grey"><v-icon>done</v-icon></v-btn>-->
                                     <!-- Review -->
-                                    <v-btn flat icon color="grey"><v-icon>mode_comment</v-icon></v-btn>
+                                    <!--<v-btn flat icon color="grey"><v-icon>mode_comment</v-icon></v-btn>-->
                                     <!-- Retire / Abandon -->
-                                    <v-btn flat icon color="grey"><v-icon>archive</v-icon></v-btn>
+                                    <!--<v-btn flat icon color="grey"><v-icon>archive</v-icon></v-btn>-->
                                     <!-- Publish -->
-                                    <v-btn flat icon color="grey"><v-icon>cloud_upload</v-icon></v-btn>
+                                    <!--<v-btn flat icon color="grey"><v-icon>cloud_upload</v-icon></v-btn>-->
                                     <!-- View -->
-                                    <v-btn flat icon color="grey"><v-icon>remove_red_eye</v-icon></v-btn>
+                                    <!--<v-btn flat icon color="grey"><v-icon>remove_red_eye</v-icon></v-btn>-->
                                     <!-- Copy -->
-                                    <v-btn flat icon color="grey"><v-icon>content_copy</v-icon></v-btn>
+                                    <!--<v-btn flat icon color="grey"><v-icon>content_copy</v-icon></v-btn>-->
                                 </td>
                             </template>
                         </v-data-table>
