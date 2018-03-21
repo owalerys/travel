@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return redirect()->route('spa');
+    return view('coming-soon');
 });
 
 Route::get('/home', function () {
