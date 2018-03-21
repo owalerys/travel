@@ -73,6 +73,16 @@ return [
                             'required' => false,
                             'additional_info' => true,
                             'category' => 'customer'
+                        ],
+                        'social_links' => [
+                            'title' => 'Social Media',
+                            'slug' => 'social_links',
+                            'filter' => 'url',
+                            'multiple' => true,
+                            'custom_sub_heading' => true,
+                            'required' => false,
+                            'additional_info' => true,
+                            'category' => 'social'
                         ]
                     ],
                     'field_categories' => [
@@ -84,6 +94,11 @@ return [
                         'customer' => [
                             'title' => 'Customer Contacts',
                             'slug' => 'customer',
+                            'at_least_one' => false
+                        ],
+                        'social' => [
+                            'title' => 'Social Media',
+                            'slug' => 'social',
                             'at_least_one' => false
                         ]
                     ]
