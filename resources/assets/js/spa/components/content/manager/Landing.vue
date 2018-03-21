@@ -153,11 +153,12 @@
                 return this.fetchSchema(this.topic.version, this.topic.slug)
             },
             types () {
+
                 if (!this.schema.type) {
                     return []
                 }
 
-                if (this.schema.type instanceof String) {
+                if (typeof this.schema.type === 'string') {
                     let type = this.schema.type
 
                     return [

@@ -25,7 +25,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-expansion-panel-content>
-                        <v-expansion-panel-content v-if="content.type === 'content'">
+                        <v-expansion-panel-content v-if="content.type === 'content' && false">
                             <div slot="header">
                                 File Uploads
                             </div>

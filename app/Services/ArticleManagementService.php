@@ -62,7 +62,7 @@ class ArticleManagementService
      * @param string|null $description
      * @return Article
      */
-    public function createNewArticleWithFirstVersion(string $title, string $categorySlug, string $version, string $type, string $url = null, Authenticatable $user, Topical $subject = null, string $description = null)
+    public function createNewArticleWithFirstVersion(string $title = null, string $categorySlug, string $version, string $type, string $url = null, Authenticatable $user, Topical $subject = null, string $description = null)
     {
         $article = $this->createNewArticle($title, $categorySlug, $version, $type, $subject, $description);
 

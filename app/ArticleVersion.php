@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
 
-class ArticleVersion extends Model
+class ArticleVersion extends Model implements HasMedia
 {
+    use HasMediaTrait;
+
     const STATUS_EDITING = 'editing';
     const STATUS_UNDER_REVIEW = 'under_review';
     const STATUS_REJECTED = 'rejected';
