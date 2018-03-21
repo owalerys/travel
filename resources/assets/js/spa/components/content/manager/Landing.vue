@@ -98,6 +98,7 @@
                             <template slot="items" slot-scope="props">
                                 <td>{{ fetchSchema(props.item.schema_version, props.item.category_slug).title }}</td>
                                 <td>{{ props.item.display_title ? props.item.display_title : '-' }}</td>
+                                <td>{{ props.item.type.charAt(0).toUpperCase() + props.item.type.slice(1) }}</td>
                                 <td>{{ (props.item.live) ? 'Live' : ((props.item.active) ? 'Draft' : 'Archived') }}</td>
                                 <td>
                                     <v-btn flat color="primary"
@@ -132,6 +133,11 @@
                     {
                         text: 'Title',
                         value: 'title',
+                        sortable: false
+                    },
+                    {
+                        text: 'Type',
+                        value: 'type',
                         sortable: false
                     },
                     {
