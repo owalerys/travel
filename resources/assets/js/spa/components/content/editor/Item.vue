@@ -20,7 +20,7 @@
                 label="Phone (excluding country code)"
                 v-if="fieldSchema.filter === 'phone'"
                 v-model="value"
-                :required="attributes.country_code"
+                :required="attributes.country_code == true"
         ></v-text-field>
         <p v-if="fieldSchema.filter === 'phone'">{{ phone }}</p>
 
@@ -29,7 +29,7 @@
                 label="Link"
                 v-if="fieldSchema.filter === 'url'"
                 v-model="value"
-                :required="attributes.display"
+                :required="attributes.display == true"
         ></v-text-field>
         <v-text-field
                 label="Text to Display"
@@ -102,7 +102,7 @@
                 countries: state => state.content.countries
             }),
             phone () {
-                if (this.fieldSchema.filter === 'phone') {
+                if (this.fieldSchema.filter === 'phone' && this.attributes.country_code && this.value) {
                     return format({ country: this.attributes.country_code, phone: this.value }, 'International')
                 }
 

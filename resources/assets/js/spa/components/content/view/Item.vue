@@ -77,11 +77,11 @@
                 return false
             },
             phone () {
-                if (this.fieldSchema.filter !== 'phone') {
-                    return ''
-                } else {
+                if (this.fieldSchema.filter === 'phone' && this.item.attributes.country_code && this.item.value) {
                     return format({ country: this.item.attributes.country_code, phone: this.item.value }, 'International')
                 }
+
+                return ''
             },
             ...mapGetters({
                 content: 'content/manage/overview/editor/content'

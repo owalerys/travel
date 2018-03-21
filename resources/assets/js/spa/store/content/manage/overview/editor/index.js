@@ -165,11 +165,9 @@ export default {
         },
         SET_FIELD_ITEMS (state, { slug, items }) {
             if (items instanceof Array && items.length > 0) {
-                console.log(1)
                 state.fields[slug].items.splice(0)
                 state.fields[slug].items.push(...items)
             } else {
-                console.log(2)
                 state.fields[slug].items.splice(0)
             }
         },

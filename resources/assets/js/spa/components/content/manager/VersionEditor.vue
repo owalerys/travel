@@ -120,9 +120,13 @@
         },
         computed: {
             version () {
-                return this.article.versions.find((item) => {
-                    return item.version === this.$route.params.version
-                })
+                if (this.article) {
+                    return this.article.versions.find((item) => {
+                        return item.version === this.$route.params.version
+                    })
+                } else {
+                    return {}
+                }
             },
             schema () {
                 return this.fetchSchema(
