@@ -75,7 +75,7 @@ return [
                             'category' => 'customer'
                         ],
                         'social_links' => [
-                            'title' => 'Social Media',
+                            'title' => 'Links',
                             'slug' => 'social_links',
                             'filter' => 'url',
                             'multiple' => true,
