@@ -50,7 +50,7 @@ export default {
                     url: (state.creation.type === 'link') ? state.creation.url : null,
                     type: state.creation.type
                 }).then((result) => {
-                    dispatch('messages/write', { type: 'success', message: 'Article created successfully', busUuid: state.creation.busUuid, timeout: 10000 }, { root: true })
+                    dispatch('messages/write', { type: 'success', message: 'Article created successfully', busUuid: state.creation.busUuid, timeout: 5000 }, { root: true })
                     commit('UPDATE_CREATING', { status: false })
                     commit('RESET_FORM')
                     resolve()
