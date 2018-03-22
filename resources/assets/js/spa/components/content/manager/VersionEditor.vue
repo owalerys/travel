@@ -78,7 +78,7 @@
                                             v-if="loaded === true && content && schema"
                                             :schema="schema"
                                             :content="content"
-                                            :airline="airlines[0]"
+                                            :airline="airline"
                                     ></travel-article>
                                 </v-card-text>
                             </v-card>
@@ -119,6 +119,15 @@
             })
         },
         computed: {
+            airline () {
+                if (this.article && this.airlines) {
+                    return this.airlines.find((item) => {
+                        return item.id === this.article.topic_id
+                    })
+                } else {
+                    return {}
+                }
+            },
             version () {
                 if (this.article) {
                     return this.article.versions.find((item) => {

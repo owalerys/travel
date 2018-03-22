@@ -209,7 +209,7 @@
                 fetchArticle: 'content/manage/overview/fetch',
                 refreshArticle: 'content/manage/overview/refresh'
             }),
-            editVersion (version) {
+            copyVersion (versionId) {
 
             }
         },
