@@ -1,8 +1,8 @@
 <template>
     <div>
-        <v-text-field label="Custom Title (optional)" v-if="fieldSchema.custom_title" v-model="title"></v-text-field>
+        <v-text-field label="Custom Title (optional)" v-if="fieldSchema.custom_title" v-model="title" :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.custom_title')"></v-text-field>
 
-        <editor-item v-for="(item, index) in field.items" :slug="slug" :key="index" :index="index" :field-schema="fieldSchema"></editor-item>
+        <editor-item v-for="(item, index) in field.items" :slug="slug" :key="index" :index="index" :field-schema="fieldSchema" :form-uuid="formUuid"></editor-item>
 
         <div v-if="fieldSchema.multiple">
             <v-btn color="success" @click="addItem({ slug })">Add Field Item</v-btn>
@@ -23,7 +23,8 @@
         },
         props: [
             'slug',
-            'schema'
+            'schema',
+            'formUuid'
         ],
         computed: {
             title: {
@@ -42,7 +43,12 @@
             },
             ...mapGetters({
                 getField: 'content/manage/overview/editor/field'
-            })
+            }),
+            ...mapGetters({
+                fieldErrors: 'validation/errors',
+                fieldHasErrors: 'validation/hasErrors',
+                categoryHasErrors: 'validation/categoryErrors'
+            }),
         },
         methods: {
             ...mapMutations({

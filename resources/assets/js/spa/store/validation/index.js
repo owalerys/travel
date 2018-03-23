@@ -9,16 +9,23 @@ export default {
     },
     getters: {
         errors: (state) => (formUuid, key) => {
+            console.log(formUuid)
+            console.log(key)
+
             let errors = state.errors.filter((item) => {
                 return item.formUuid === formUuid && item.key === key
             })
+
+            console.log(errors)
 
             if (errors.length) {
                 let result = []
 
                 for (let i = 0; i < errors.length; i++) {
-                    result.push(...errors[i])
+                    result.push(...errors[i].value)
                 }
+
+                return result
             } else {
                 return []
             }
@@ -40,11 +47,13 @@ export default {
                         commit('SET_ERROR', { formUuid, key: prop, value: errors[prop] })
                     }
                 }
+                resolve()
             })
         },
         flush ({ commit }, { formUuid }) {
             return new Promise((resolve, reject) => {
                 commit('CLEAR_FORM', { formUuid })
+                resolve()
             })
         }
     },
@@ -68,7 +77,7 @@ export default {
                     return item.formUuid === formUuid
                 })
 
-                if (i !== -1) {
+                if (i > -1) {
                     state.errors.splice(i, 1)
                 }
             }

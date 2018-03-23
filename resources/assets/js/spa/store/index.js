@@ -7,6 +7,7 @@ import axios from '../http'
 import auth from './auth'
 import content from './content'
 import messages from './messages'
+import validation from './validation'
 
 Vue.use(Vuex)
 
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     modules: {
         auth,
         content,
-        messages
+        messages,
+        validation
     },
     state: {
         schemas: {}

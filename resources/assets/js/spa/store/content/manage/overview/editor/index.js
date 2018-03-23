@@ -16,7 +16,8 @@ export default {
             modified: false,
             articleId: null,
             saving: false,
-            busUuid: uuid.v4()
+            busUuid: uuid.v4(),
+            formUuid: uuid.v4()
         }
     },
     getters: {
@@ -48,8 +49,9 @@ export default {
         }
     },
     actions: {
-        load ({ commit, state, rootGetters }, { article, versionNumber }) {
+        load ({ commit, state, rootGetters, dispatch }, { article, versionNumber }) {
             return new Promise((resolve, reject) => {
+                dispatch('validation/flush', { formUuid: state.formUuid }, { root: true })
                 commit('UNSET_FIELDS')
 
                 let version = article.versions.find((item) => {
@@ -93,6 +95,7 @@ export default {
         },
         save ({ commit, state, dispatch }) {
             commit('SAVING_STATE', { status: true })
+            dispatch('validation/flush', { formUuid: state.formUuid }, { root: true })
             http.patch('/manage/article/' + state.articleId + '/' + state.versionId,
                 {
                     content: {
@@ -108,7 +111,8 @@ export default {
                 dispatch('messages/write', { type: 'success', busUuid: state.busUuid, message: 'Saved!', timeout: 5000 }, { root: true })
                 commit('SAVING_STATE', { status: false })
             }).catch((error) => {
-                dispatch('messages/write', { type: 'error', busUuid: state.busUuid, message: 'An error occurred...', timeout: 10000 }, { root: true })
+                dispatch('messages/write', { type: 'error', busUuid: state.busUuid, message: error.response.data.message || 'An unknown error occurred...', timeout: 10000 }, { root: true })
+                dispatch('validation/load', { formUuid: state.formUuid, errors: error.response.data.errors || [] }, { root: true })
                 commit('SAVING_STATE', { status: false })
             })
         }

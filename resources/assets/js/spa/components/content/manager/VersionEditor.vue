@@ -19,9 +19,9 @@
                             <div slot="header">Title, Description, URL</div>
                             <v-card>
                                 <v-card-text>
-                                    <v-text-field label="Title" v-model="title"></v-text-field>
-                                    <v-text-field label="Description" v-model="description" multi-line></v-text-field>
-                                    <v-text-field v-if="content.type === 'link'" label="Link" v-model="url"></v-text-field>
+                                    <v-text-field label="Title" v-model="title" :error-messages="fieldErrors(formUuid, 'content.title')"></v-text-field>
+                                    <v-text-field label="Description" v-model="description" multi-line :error-messages="fieldErrors(formUuid, 'content.description')"></v-text-field>
+                                    <v-text-field v-if="content.type === 'link'" label="Link" v-model="url" :error-messages="fieldErrors(formUuid, 'content.url')"></v-text-field>
                                 </v-card-text>
                             </v-card>
                         </v-expansion-panel-content>
@@ -40,7 +40,7 @@
                             <div slot="header" v-else>{{ schema.fields[slug].title }}</div>
                             <v-card>
                                 <v-card-text>
-                                    <travel-items :slug="slug" :schema="schema"></travel-items>
+                                    <travel-items :slug="slug" :schema="schema" :form-uuid="formUuid"></travel-items>
                                 </v-card-text>
                             </v-card>
                         </v-expansion-panel-content>
@@ -95,6 +95,7 @@
     import Items from 'Travel/components/content/editor/Items'
     import Article from 'Travel/components/content/view/Article'
     import MessageBus from 'Travel/components/MessageBus'
+    import Vue from 'vue'
 
     export default {
         data () {
@@ -145,14 +146,18 @@
             },
             ...mapGetters({
                 fetchSchema: 'content/categoryBySlugAndVersion',
-                airlines: 'content/airlines'
+                airlines: 'content/airlines',
+                fieldErrors: 'validation/errors',
+                fieldHasErrors: 'validation/hasErrors',
+                categoryHasErrors: 'validation/categoryErrors'
             }),
             ...mapState('content/manage/overview', {
                 article: state => state.article,
                 content: state => state.editor,
                 busUuid: state => state.editor.busUuid,
                 saving: state => state.editor.saving,
-                modified: state => state.editor.modified
+                modified: state => state.editor.modified,
+                formUuid: state => state.editor.formUuid
             }),
             title: {
                 get () {
@@ -190,8 +195,9 @@
                 save: 'save'
             }),
             loadVersion () {
-                this.load({ article: this.article , versionNumber: this.$route.params.version })
-                this.loaded = true
+                this.load({ article: this.article , versionNumber: this.$route.params.version }).then(() => {
+                    this.loaded = true
+                })
             }
         },
         components: {

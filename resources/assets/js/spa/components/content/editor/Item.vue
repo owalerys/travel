@@ -2,7 +2,7 @@
     <div>
         <v-card hover>
             <v-card-text>
-                <v-text-field label="Custom Heading (optional)" v-if="fieldSchema.multiple && fieldSchema.custom_sub_heading" v-model="subHeading"></v-text-field>
+                <v-text-field label="Custom Heading (optional)" v-if="fieldSchema.multiple && fieldSchema.custom_sub_heading" v-model="subHeading" :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.custom_sub_heading')"></v-text-field>
 
                 <!-- Phone -->
                 <v-select
@@ -17,12 +17,14 @@
                         hint="Countries"
                         persistent-hint
                         :required="value instanceof String && value.length"
+                        :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.items.' + index + '.attributes.country_code')"
                 ></v-select>
                 <v-text-field
                         label="Phone (excluding country code)"
                         v-if="fieldSchema.filter === 'phone'"
                         v-model="value"
                         :required="attributes.country_code == true"
+                        :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.items.' + index + '.value')"
                 ></v-text-field>
                 <p v-if="fieldSchema.filter === 'phone'">{{ phone }}</p>
 
@@ -32,21 +34,29 @@
                         v-if="fieldSchema.filter === 'url'"
                         v-model="value"
                         :required="attributes.display == true"
+                        :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.items.' + index + '.value')"
                 ></v-text-field>
                 <v-text-field
                         label="Text to Display"
                         v-if="fieldSchema.filter === 'url'"
                         :value="attributes.display"
                         @input="inputAttribute({ attribute: 'display', value: $event })"
+                        :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.items.' + index + '.attributes.display')"
                 ></v-text-field>
 
                 <!-- Paragraph -->
-                <v-text-field label="Paragraph Text" v-if="fieldSchema.filter === 'paragraph'" v-model="value" multi-line></v-text-field>
+                <v-text-field label="Paragraph Text" v-if="fieldSchema.filter === 'paragraph'" v-model="value" multi-line
+                              :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.items.' + index + '.value')"
+                ></v-text-field>
 
                 <!-- Email -->
-                <v-text-field label="Email" v-if="fieldSchema.filter === 'email'" v-model="value"></v-text-field>
+                <v-text-field label="Email" v-if="fieldSchema.filter === 'email'" v-model="value"
+                      :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.items.' + index + '.value')"
+                ></v-text-field>
 
-                <v-text-field label="Additional Info" v-if="fieldSchema.additional_info" v-model="additionalInfo" multi-line></v-text-field>
+                <v-text-field label="Additional Info" v-if="fieldSchema.additional_info" v-model="additionalInfo" multi-line
+                      :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.items.' + index + '.additional_info')"
+                ></v-text-field>
             </v-card-text>
         </v-card>
     </div>
@@ -65,7 +75,8 @@
         props: [
             'index',
             'slug',
-            'fieldSchema'
+            'fieldSchema',
+            'formUuid'
         ],
         computed: {
             value: {
@@ -111,6 +122,14 @@
                 }
 
                 return ''
+            },
+            ...mapGetters({
+                fieldErrors: 'validation/errors',
+                fieldHasErrors: 'validation/hasErrors',
+                categoryHasErrors: 'validation/categoryErrors'
+            }),
+            test () {
+                return this.fieldErrors(this.formUuid, 'content.fields.' + this.slug + '.items.' + this.index + '.value')
             }
         },
         methods: {
