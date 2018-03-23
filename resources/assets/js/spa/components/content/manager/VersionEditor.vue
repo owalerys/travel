@@ -14,8 +14,8 @@
                 <v-container fluid grid-list-md v-if="schema">
                     <h2>Category: {{ schema.title || '' }}</h2>
                     <br/>
-                    <v-expansion-panel popout>
-                        <v-expansion-panel-content v-model="titleExpand">
+                    <v-expansion-panel popout expand>
+                        <v-expansion-panel-content v-model="expand.title">
                             <div slot="header">Title, Description, URL</div>
                             <v-card>
                                 <v-card-text>
@@ -102,13 +102,15 @@
             return {
                 loaded: false,
                 previewExpand: true,
-                titleExpand: true
+                expand: {
+                    title: true
+                }
             }
         },
         beforeRouteEnter (to, from, next) {
             next((vm) => {
                 vm.previewExpand = true
-                vm.titleExpand = true
+                vm.expand.title = true
                 if (vm.article) {
                     vm.loadVersion({ article_id: to.params.article_id, version: to.params.version })
                 } else {
