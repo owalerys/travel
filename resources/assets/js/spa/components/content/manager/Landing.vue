@@ -28,6 +28,7 @@
         <v-container fluid>
             <v-layout row wrap>
                 <v-flex xs12>
+                    <message-bus :bus-uuid="storeBusUuidMain"></message-bus>
                     <v-card light color="white">
                         <v-card-text>
                             <v-layout row wrap>
@@ -205,6 +206,7 @@
                 storeTopic: (state) => state.topic,
                 storeCreating: (state) => state.creating,
                 storeBusUuid: (state) => state.creation.busUuid,
+                storeBusUuidMain: (state) => state.busUuid,
                 storeType: (state) => state.creation.type,
                 storeTitle: (state) => state.creation.title,
                 storeDescription: (state) => state.creation.description,
@@ -274,8 +276,14 @@
             }),
             ...mapActions('content/manage', {
                 runSearch: 'search',
-                doCreate: 'create'
-            })
+                create: 'create'
+            }),
+            doCreate () {
+                this.create().then(() => {
+                    this.newDialog = false
+                    this.runSearch()
+                })
+            }
         },
         components: {
             'message-bus': MessageBus

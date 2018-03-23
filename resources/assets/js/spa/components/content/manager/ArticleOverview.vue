@@ -75,7 +75,7 @@
                     </v-card-text>
                 </v-card>
             </v-flex>
-            <v-flex xs12 v-if="!loading && article">
+            <v-flex xs12 v-if="!loading && article && false">
                 <v-card>
                     <v-card-title><div class="headline">Log</div></v-card-title>
                     <v-card-text>

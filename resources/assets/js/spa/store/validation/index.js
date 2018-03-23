@@ -9,14 +9,9 @@ export default {
     },
     getters: {
         errors: (state) => (formUuid, key) => {
-            console.log(formUuid)
-            console.log(key)
-
             let errors = state.errors.filter((item) => {
                 return item.formUuid === formUuid && item.key === key
             })
-
-            console.log(errors)
 
             if (errors.length) {
                 let result = []
