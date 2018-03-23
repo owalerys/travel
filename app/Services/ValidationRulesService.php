@@ -238,6 +238,9 @@ class ValidationRulesService
                 case 'paragraph':
                     $ruleArray[] = 'string';
                     break;
+                case 'list':
+                    $ruleArray[] = 'string';
+                    break;
                 case 'free_text':
                     $ruleArray[] = 'string';
                     break;

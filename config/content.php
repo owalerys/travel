@@ -251,7 +251,7 @@ return [
                     'accept_new_submissions' => true,
                     'fields' => [
                         'maximum_letters' => [
-                            'title' => 'Maximum # of Letters',
+                            'title' => 'Maximum # of Letters Changed',
                             'slug' => 'maximum_letters',
                             'filter' => 'paragraph',
                             'required' => false,
@@ -317,9 +317,83 @@ return [
                     ],
                     'field_categories' => []
                 ],
-                'death_medical' => [
-                    'title' => 'Death/Medical Policy',
-                    'slug' => 'death_medical',
+                'name_change' => [
+                    'title' => 'Name Change',
+                    'slug' => 'name_change',
+                    'association' => 'airline',
+                    'type' => 'content',
+                    'accept_new_submissions' => true,
+                    'fields' => [
+                        'maximum_letters' => [
+                            'title' => 'Maximum # of Letters Changed',
+                            'slug' => 'maximum_letters',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'waiver' => [
+                            'title' => 'Waiver',
+                            'slug' => 'waiver',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'osi' => [
+                            'title' => 'OSI',
+                            'slug' => 'osi',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'endorsement_line' => [
+                            'title' => 'Endorsement Line',
+                            'slug' => 'endorsement_line',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'existing_pnr' => [
+                            'title' => 'Modify Existing PNR',
+                            'slug' => 'existing_pnr',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'new_pnr' => [
+                            'title' => 'New PNR Required',
+                            'slug' => 'new_pnr',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'reissue_by_agency' => [
+                            'title' => 'Reissue by Agency',
+                            'slug' => 'reissue_by_agency',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'adm_fee' => [
+                            'title' => 'ADM Fee',
+                            'slug' => 'adm_fee',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true
+                        ],
+                        'additional_info' => [
+                            'title' => 'Additional Info',
+                            'slug' => 'additional_info',
+                            'filter' => 'paragraph',
+                            'required' => false,
+                            'additional_info' => true,
+                            'multiple' => true
+                        ],
+                    ],
+                    'field_categories' => []
+                ],
+                'death' => [
+                    'title' => 'Death Policy',
+                    'slug' => 'death',
                     'association' => 'airline',
                     'type' => 'content',
                     'accept_new_submissions' => true,
@@ -329,16 +403,14 @@ return [
                             'slug' => 'relation_to_traveler_death',
                             'filter' => 'paragraph',
                             'required' => false,
-                            'additional_info' => true,
-                            'category' => 'death'
+                            'additional_info' => true
                         ],
                         'required_documentation_death' => [
                             'title' => 'Required Documentation',
                             'slug' => 'required_documentation_death',
                             'filter' => 'paragraph',
                             'required' => false,
-                            'additional_info' => true,
-                            'category' => 'death'
+                            'additional_info' => true
                         ],
                         'steps_death' => [
                             'title' => 'Steps to Follow',
@@ -346,33 +418,39 @@ return [
                             'filter' => 'paragraph',
                             'required' => false,
                             'additional_info' => true,
-                            'category' => 'death',
                             'multiple' => true,
                             'custom_sub_heading' => true
                         ],
+                    ],
+                    'field_categories' => []
+                ],
+                'medical' => [
+                    'title' => 'Medical Policy',
+                    'slug' => 'medical',
+                    'association' => 'airline',
+                    'type' => 'content',
+                    'accept_new_submissions' => false,
+                    'fields' => [
                         'provisions_medical' => [
                             'title' => 'Provisions',
                             'slug' => 'provisions_medical',
                             'filter' => 'paragraph',
                             'required' => false,
-                            'additional_info' => true,
-                            'category' => 'medical'
+                            'additional_info' => true
                         ],
                         'relation_to_traveler_medical' => [
                             'title' => 'Relation to Traveler',
                             'slug' => 'relation_to_traveler_medical',
                             'filter' => 'paragraph',
                             'required' => false,
-                            'additional_info' => true,
-                            'category' => 'medical'
+                            'additional_info' => true
                         ],
                         'required_documentation_medical' => [
                             'title' => 'Required Documentation',
                             'slug' => 'required_documentation_medical',
                             'filter' => 'paragraph',
                             'required' => false,
-                            'additional_info' => true,
-                            'category' => 'medical'
+                            'additional_info' => true
                         ],
                         'steps_medical' => [
                             'title' => 'Steps to Follow',
@@ -380,23 +458,11 @@ return [
                             'filter' => 'paragraph',
                             'required' => false,
                             'additional_info' => true,
-                            'category' => 'medical',
                             'multiple' => true,
                             'custom_sub_heading' => true
                         ],
                     ],
-                    'field_categories' => [
-                        'death' => [
-                            'title' => 'Death',
-                            'slug' => 'death',
-                            'at_least_one' => false
-                        ],
-                        'medical' => [
-                            'title' => 'Medical',
-                            'slug' => 'medical',
-                            'at_least_one' => false
-                        ]
-                    ]
+                    'field_categories' => []
                 ],
                 'baggage_allowance' => [
                     'title' => 'Baggage Allowance',
@@ -419,14 +485,8 @@ return [
                             'slug' => 'registration_url',
                             'filter' => 'url',
                             'required' => false,
-                            'additional_info' => true
-                        ],
-                        'registration_where' => [
-                            'title' => 'Where to Register',
-                            'slug' => 'registration_where',
-                            'filter' => 'paragraph',
-                            'required' => false,
-                            'additional_info' => true
+                            'additional_info' => true,
+                            'custom_title' => true
                         ],
                         'registration_steps' => [
                             'title' => 'Steps to Register',
