@@ -65,7 +65,7 @@
                                     This description will say "Click to read more" if you don't write one
                                 </v-card-text>
                                 <v-card-actions>
-                                    <v-btn flat v-if="content.type === 'link'">Visit External Link</v-btn>
+                                    <v-btn flat v-if="content.type === 'link'" :href="content.url" target="_blank">Visit External Link</v-btn>
                                     <v-btn flat v-if="content.type === 'content'">View Article</v-btn>
                                 </v-card-actions>
                             </v-card>
