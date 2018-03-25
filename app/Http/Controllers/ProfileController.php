@@ -22,4 +22,9 @@ class ProfileController extends Controller
         return response()->json(User::whereId(Auth::user()->id)->with(['roles.permissions', 'permissions'])->first());
     }
 
+    public function updatePassword()
+    {
+        
+    }
+
 }

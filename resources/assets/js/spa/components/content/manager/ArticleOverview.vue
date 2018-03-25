@@ -55,7 +55,8 @@
                                 <td>
                                     <!-- Edit -->
                                     <v-btn flat icon color="grey"
-                                           :to="{ name: 'version-editor', params: { article_id: props.item.article_id, version: props.item.version } }"
+                                           :to="{ name: 'version-editor', params: { article_id: props.item.article_id, version: props.item.version, action: 'edit' } }"
+                                           v-if="user.id === props.item.author.id"
                                     ><v-icon>mode_edit</v-icon></v-btn>
                                     <!-- Done -->
                                     <!--<v-btn flat icon color="grey"><v-icon>done</v-icon></v-btn>-->
@@ -66,7 +67,9 @@
                                     <!-- Publish -->
                                     <!--<v-btn flat icon color="grey"><v-icon>cloud_upload</v-icon></v-btn>-->
                                     <!-- View -->
-                                    <!--<v-btn flat icon color="grey"><v-icon>remove_red_eye</v-icon></v-btn>-->
+                                    <v-btn flat icon color="grey"
+                                        :to="{ name: 'version-editor', params: { article_id: props.item.article_id, version: props.item.version, action: 'view' } }"
+                                    ><v-icon>remove_red_eye</v-icon></v-btn>
                                     <!-- Copy -->
                                     <!--<v-btn flat icon color="grey"><v-icon>content_copy</v-icon></v-btn>-->
                                 </td>
@@ -178,7 +181,8 @@
                 return summary
             },
             ...mapGetters({
-                fetchSchema: 'content/categoryBySlugAndVersion'
+                fetchSchema: 'content/categoryBySlugAndVersion',
+                user: 'auth/user'
             }),
             schema () {
                 let version = this.article.schema_version || ''

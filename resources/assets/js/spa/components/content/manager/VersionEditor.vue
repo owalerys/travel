@@ -5,12 +5,12 @@
                 <v-btn flat color="primary" dark :to="{ name: 'article-overview', params: { article_id: $route.params.article_id } }">
                     <v-icon left dark>chevron_left</v-icon> Back
                 </v-btn>
-                <v-btn flat color="green" @click="save" v-if="modified === true" :loading="saving === true">Save</v-btn>
+                <v-btn flat color="green" @click="save" v-if="modified === true && $route.params.action === 'edit'" :loading="saving === true">Save</v-btn>
             </v-flex>
             <v-flex xs12>
                 <message-bus :busUuid="busUuid"></message-bus>
             </v-flex>
-            <v-flex xs6>
+            <v-flex xs6 v-if="$route.params.action === 'edit'">
                 <v-container fluid grid-list-md v-if="schema">
                     <h2>Category: {{ schema.title || '' }}</h2>
                     <br/>
@@ -47,12 +47,12 @@
                     </v-expansion-panel>
                 </v-container>
             </v-flex>
-            <v-flex xs6>
+            <v-flex xs6 v-if="$route.params.action === 'edit'">
                 <v-container fluid grid-list-md>
                     <h2>Preview</h2>
                     <br/>
                     <v-expansion-panel popout>
-                        <v-expansion-panel-content>
+                        <v-expansion-panel-content v-model="expand.search">
                             <div slot="header">Search Results Preview</div>
                             <v-card>
                                 <v-card-title>
@@ -70,7 +70,43 @@
                                 </v-card-actions>
                             </v-card>
                         </v-expansion-panel-content>
-                        <v-expansion-panel-content v-model="previewExpand" v-if="content.type === 'content'">
+                        <v-expansion-panel-content v-model="expand.preview" v-if="content.type === 'content'">
+                            <div slot="header">Article Preview</div>
+                            <v-card>
+                                <v-card-text>
+                                    <travel-article
+                                            v-if="loaded === true && content && schema"
+                                            :schema="schema"
+                                            :content="content"
+                                            :airline="airline"
+                                    ></travel-article>
+                                </v-card-text>
+                            </v-card>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-container>
+            </v-flex>
+            <v-flex xs12 v-if="$route.params.action === 'view'">
+                <v-container fluid grid-list-md>
+                    <h2>Preview</h2>
+                    <br/>
+                    <v-expansion-panel popout>
+                        <v-expansion-panel-content v-model="expand.search">
+                            <div slot="header">Search Results Preview</div>
+                            <v-card>
+                                <v-card-title>
+                                    <div class="headline">{{ (title) ? title : schema.title }}</div>
+                                </v-card-title>
+                                <v-card-text>
+                                    {{ description }}
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn flat v-if="content.type === 'link'" :href="content.url" target="_blank">Visit External Link</v-btn>
+                                    <v-btn flat v-if="content.type === 'content'">View Article</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-expansion-panel-content>
+                        <v-expansion-panel-content v-model="expand.preview" v-if="content.type === 'content'">
                             <div slot="header">Article Preview</div>
                             <v-card>
                                 <v-card-text>
@@ -101,18 +137,26 @@
         data () {
             return {
                 loaded: false,
-                previewExpand: true,
                 expand: {
-                    title: true
+                    title: true,
+                    search: false,
+                    preview: true
                 }
             }
         },
         beforeRouteEnter (to, from, next) {
             next((vm) => {
-                vm.previewExpand = true
                 vm.expand.title = true
                 if (vm.article) {
-                    vm.loadVersion({ article_id: to.params.article_id, version: to.params.version })
+                    vm.loadVersion({ article_id: to.params.article_id, version: to.params.version }).then(() => {
+                        if (vm.content.type === 'link') {
+                            vm.expand.preview = false
+                            vm.expand.search = true
+                        } else {
+                            vm.expand.search = false
+                            vm.expand.preview = true
+                        }
+                    })
                 } else {
                     vm.$router.push({
                         name: 'article-overview',
@@ -197,7 +241,7 @@
                 save: 'save'
             }),
             loadVersion () {
-                this.load({ article: this.article , versionNumber: this.$route.params.version }).then(() => {
+                return this.load({ article: this.article , versionNumber: this.$route.params.version }).then(() => {
                     this.loaded = true
                 })
             }

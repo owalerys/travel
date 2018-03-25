@@ -6,6 +6,9 @@ export default {
         return {
             authenticated: true,
             username: '',
+            id: null,
+            name: null,
+            email: null,
             roles: [],
             permissions: []
         }
@@ -27,6 +30,9 @@ export default {
                     return permission === storedPermission.name
                 }) > -1
             }) > -1
+        },
+        user (state) {
+            return state
         }
     },
     actions: {
@@ -61,9 +67,12 @@ export default {
             state.authenticated = false
             state.username = ''
         },
-        SYNC_PERMISSIONS (state, { permissions, roles }) {
+        SYNC_PERMISSIONS (state, { permissions, roles, name, email, id }) {
             state.roles.splice(0)
             state.permissions.splice(0)
+            state.id = id
+            state.name = name
+            state.email = email
 
             state.roles.push(...roles)
             state.permissions.push(...permissions)
