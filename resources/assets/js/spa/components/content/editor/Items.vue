@@ -2,7 +2,9 @@
     <div>
         <v-text-field label="Custom Title (optional)" v-if="fieldSchema.custom_title" v-model="title" :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.custom_title')"></v-text-field>
 
-        <editor-item v-for="(item, index) in field.items" :slug="slug" :key="index" :index="index" :field-schema="fieldSchema" :form-uuid="formUuid"></editor-item>
+        <draggable v-model="dragItems" :move="checkMove" :options="{ handle: '.draggable' }">
+            <editor-item v-for="(item, index) in dragItems" :slug="slug" :key="index" :index="index" :field-schema="fieldSchema" :form-uuid="formUuid"></editor-item>
+        </draggable>
 
         <div v-if="fieldSchema.multiple">
             <v-btn color="success" @click="addItem({ slug })">Add Field Item</v-btn>
@@ -12,8 +14,9 @@
 </template>
 
 <script>
-    import { mapMutations, mapGetters } from 'vuex'
+    import { mapMutations, mapGetters, mapActions } from 'vuex'
     import Item from './Item'
+    import Draggable from 'vuedraggable'
 
     export default {
         data () {
@@ -38,6 +41,14 @@
             field () {
                 return this.getField(this.slug)
             },
+            dragItems: {
+                get () {
+                    return this.field.items
+                },
+                set (value) {
+                    this.reorderField({ items: value, slug: this.slug })
+                }
+            },
             fieldSchema () {
                 return this.schema.fields[this.slug]
             },
@@ -54,11 +65,16 @@
             ...mapMutations({
                 setTitle: 'content/manage/overview/editor/SET_FIELD_TITLE',
                 addItem: 'content/manage/overview/editor/ADD_FIELD_ITEM',
-                deleteItem: 'content/manage/overview/editor/DELETE_LAST_FIELD'
-            })
+                deleteItem: 'content/manage/overview/editor/DELETE_LAST_FIELD',
+                reorderField: 'content/manage/overview/editor/REORDER_FIELD'
+            }),
+            checkMove (event) {
+                console.log(event)
+            }
         },
         components: {
-            'editor-item': Item
+            'editor-item': Item,
+            'draggable': Draggable
         }
     }
 </script>

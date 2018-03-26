@@ -94,26 +94,36 @@ export default {
             })
         },
         save ({ commit, state, dispatch }) {
-            commit('SAVING_STATE', { status: true })
-            dispatch('validation/flush', { formUuid: state.formUuid }, { root: true })
-            http.patch('/manage/article/' + state.articleId + '/' + state.versionId,
-                {
-                    content: {
-                        title: state.title,
-                        description: state.description,
-                        url: state.url,
-                        type: state.type,
-                        fields: state.fields,
-                        schema_version: state.schema_version,
-                        category_slug: state.category_slug
-                    }
-                }).then((resolve) => {
-                dispatch('messages/write', { type: 'success', busUuid: state.busUuid, message: 'Saved!', timeout: 5000 }, { root: true })
-                commit('SAVING_STATE', { status: false })
-            }).catch((error) => {
-                dispatch('messages/write', { type: 'error', busUuid: state.busUuid, message: error.response.data.message || 'An unknown error occurred...', timeout: 10000 }, { root: true })
-                dispatch('validation/load', { formUuid: state.formUuid, errors: error.response.data.errors || [] }, { root: true })
-                commit('SAVING_STATE', { status: false })
+            return new Promise((resolve, reject) => {
+                commit('SAVING_STATE', { status: true })
+                dispatch('validation/flush', { formUuid: state.formUuid }, { root: true })
+                http.patch('/manage/article/' + state.articleId + '/' + state.versionId,
+                    {
+                        content: {
+                            title: state.title,
+                            description: state.description,
+                            url: state.url,
+                            type: state.type,
+                            fields: state.fields,
+                            schema_version: state.schema_version,
+                            category_slug: state.category_slug
+                        }
+                    }).then((resolve) => {
+                    dispatch('messages/write', { type: 'success', busUuid: state.busUuid, message: 'Saved!', timeout: 5000 }, { root: true })
+                    commit('SAVING_STATE', { status: false })
+                    resolve()
+                }).catch((error) => {
+                    dispatch('messages/write', { type: 'error', busUuid: state.busUuid, message: error.response.data.message || 'An unknown error occurred...', timeout: 10000 }, { root: true })
+                    dispatch('validation/load', { formUuid: state.formUuid, errors: error.response.data.errors || [] }, { root: true })
+                    commit('SAVING_STATE', { status: false })
+                    reject()
+                })
+            })
+        },
+        reorder ({ commit }, { slug, oldIndex, newIndex }) {
+            return new Promise((resolve, reject) => {
+                commit('REORDER_FIELD', { slug, oldIndex, newIndex })
+                resolve()
             })
         }
     },
@@ -226,6 +236,9 @@ export default {
             state.fields[slug].items[key].attributes[attribute] = value
 
             state.modified = true
+        },
+        REORDER_FIELD (state, { items, slug }) {
+            state.fields[slug].items.splice(0, items.length, ...items)
         }
     }
 }

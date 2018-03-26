@@ -1,7 +1,9 @@
 <template>
     <div>
-        <v-card hover>
+        <v-card :class="{ 'elevation-2': fieldSchema.multiple == true }">
             <v-card-text>
+                <v-icon class="draggable" color="grey" v-if="fieldSchema.multiple">drag_handle</v-icon>
+
                 <v-text-field label="Custom Heading (optional)" v-if="fieldSchema.multiple && fieldSchema.custom_sub_heading" v-model="subHeading" :error-messages="fieldErrors(formUuid, 'content.fields.' + slug + '.custom_sub_heading')"></v-text-field>
 
                 <!-- Phone -->
@@ -59,6 +61,7 @@
                 ></v-text-field>
             </v-card-text>
         </v-card>
+        <br v-if="fieldSchema.multiple"/>
     </div>
 </template>
 
@@ -145,3 +148,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .draggable {
+        cursor: move;
+        cursor: -webkit-grabbing;
+    }
+</style>
