@@ -9,8 +9,8 @@
             <h4 v-if="item.custom_heading && fieldSchema.multiple">{{ item.custom_heading }}</h4>
         </div>
         <div v-else>
-            <h2>{{ (field.custom_title) ? field.custom_title : fieldSchema.title }}</h2>
-            <v-divider></v-divider>
+            <h2 v-if="index === 0">{{ (field.custom_title) ? field.custom_title : fieldSchema.title }}</h2>
+            <v-divider v-if="index === 0"></v-divider>
             <h3 v-if="item.custom_heading && fieldSchema.multiple">{{ item.custom_heading }}</h3>
         </div>
 

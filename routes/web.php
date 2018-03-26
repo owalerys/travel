@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', 'ProfileController@show');
         Route::get('/permissions', 'ProfileController@permissions');
+        Route::patch('/password', 'ProfileController@updatePassword');
     });
 
     /**

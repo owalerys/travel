@@ -116,7 +116,7 @@ export default {
                     dispatch('messages/write', { type: 'error', busUuid: state.busUuid, message: error.response.data.message || 'An unknown error occurred...', timeout: 10000 }, { root: true })
                     dispatch('validation/load', { formUuid: state.formUuid, errors: error.response.data.errors || [] }, { root: true })
                     commit('SAVING_STATE', { status: false })
-                    reject()
+                    reject(error)
                 })
             })
         },

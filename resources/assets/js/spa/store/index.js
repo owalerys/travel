@@ -8,6 +8,7 @@ import auth from './auth'
 import content from './content'
 import messages from './messages'
 import validation from './validation'
+import settings from './settings'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default new Vuex.Store({
         auth,
         content,
         messages,
-        validation
+        validation,
+        settings
     },
     state: {
         schemas: {}

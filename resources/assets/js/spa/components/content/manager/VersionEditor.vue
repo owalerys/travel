@@ -5,7 +5,7 @@
                 <v-btn flat color="primary" dark :to="{ name: 'article-overview', params: { article_id: $route.params.article_id } }">
                     <v-icon left dark>chevron_left</v-icon> Back
                 </v-btn>
-                <v-btn flat color="green" @click="save" v-if="modified === true && $route.params.action === 'edit'" :loading="saving === true">Save</v-btn>
+                <v-btn flat color="green" @click="doSave" v-if="modified === true && $route.params.action === 'edit'" :loading="saving === true">Save</v-btn>
             </v-flex>
             <v-flex xs12>
                 <message-bus :busUuid="busUuid"></message-bus>
@@ -244,6 +244,9 @@
                 return this.load({ article: this.article , versionNumber: this.$route.params.version }).then(() => {
                     this.loaded = true
                 })
+            },
+            doSave () {
+                this.save().catch((error) => {})
             }
         },
         components: {
