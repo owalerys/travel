@@ -14,7 +14,7 @@
                 <v-container fluid grid-list-md v-if="schema">
                     <h2>Category: {{ schema.title || '' }}</h2>
                     <br/>
-                    <v-expansion-panel popout expand>
+                    <v-expansion-panel popout>
                         <v-expansion-panel-content v-model="expand.title">
                             <div slot="header">Title, Description, URL</div>
                             <v-card>
