@@ -21,16 +21,10 @@
         <p v-else-if="fieldSchema.filter === 'phone'">
             {{ phone }}
         </p>
-        <p v-else-if="fieldSchema.filter === 'paragraph'">
-            {{ item.value }}
-        </p>
-        <p v-else>
-            {{ item.value }}
-        </p>
+        <p v-else-if="fieldSchema.filter === 'paragraph'" v-html="sanitizedValue"></p>
+        <p v-else v-html="sanitizedValue"></p>
 
-        <p v-if="item.additional_info">
-            <i>{{ item.additional_info }}</i>
-        </p>
+        <p v-if="item.additional_info"><i v-html="sanitizedAdditionalInfo"></i></p>
     </div>
 </template>
 
@@ -85,7 +79,24 @@
             },
             ...mapGetters({
                 content: 'content/manage/overview/editor/content'
-            })
+            }),
+            sanitizedValue () {
+                return this.prep(this.item.value)
+            },
+            sanitizedAdditionalInfo () {
+                return this.prep(this.item.additional_info)
+            }
+        },
+        methods: {
+            prep (value) {
+                value = value || ''
+
+                value = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+
+                value = value.replace(/\n/g, '<br/>')
+
+                return value
+            }
         }
     }
 </script>
