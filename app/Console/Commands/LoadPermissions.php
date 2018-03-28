@@ -42,7 +42,7 @@ class LoadPermissions extends Command
 
         Artisan::call('db:seed', [
             '--class' => \PermissionSeeder::class,
-            '--force' => ''
+            '--force' => true
         ]);
 
         $this->info('Seeding Complete');

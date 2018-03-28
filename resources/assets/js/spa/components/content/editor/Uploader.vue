@@ -27,7 +27,7 @@
                             :loading="props.item.status === 'deleting'"
                             @click="localDelete({ id: props.item.id })"
                     ><v-icon>delete_forever</v-icon></v-btn>
-                    <v-btn flat icon color="grey" v-if="props.item.status === 'uploaded'"><v-icon>settings</v-icon></v-btn>
+                    <!--<v-btn flat icon color="grey" v-if="props.item.status === 'uploaded'"><v-icon>settings</v-icon></v-btn>-->
                 </td>
             </template>
         </v-data-table>
