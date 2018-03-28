@@ -17,7 +17,12 @@ export default {
             articleId: null,
             saving: false,
             busUuid: uuid.v4(),
-            formUuid: uuid.v4()
+            formUuid: uuid.v4(),
+            media: {
+                busUuid: uuid.v4(),
+                uploads: [],
+                uploading: false
+            }
         }
     },
     getters: {
@@ -46,6 +51,15 @@ export default {
             }
 
             return {}
+        },
+        upload: (state) => (id) => {
+            if (state.media.uploads.length) {
+                return state.media.uploads.find((item) => {
+                    return item.id === id
+                })
+            }
+
+            return {}
         }
     },
     actions: {
@@ -53,6 +67,7 @@ export default {
             return new Promise((resolve, reject) => {
                 dispatch('validation/flush', { formUuid: state.formUuid }, { root: true })
                 commit('UNSET_FIELDS')
+                commit('CLEAR_MEDIA')
 
                 let version = article.versions.find((item) => {
                     return item.version === versionNumber
@@ -70,6 +85,7 @@ export default {
                     articleId: article.id
                 })
 
+                commit('PUSH_MEDIA', { media: version.media })
                 commit('UPDATE_TYPE', { type: version.type })
                 commit('UPDATE_TITLE', { title: version.title || '' })
                 commit('UPDATE_DESCRIPTION', { description: version.description || '' })
@@ -124,6 +140,86 @@ export default {
             return new Promise((resolve, reject) => {
                 commit('REORDER_FIELD', { slug, oldIndex, newIndex })
                 resolve()
+            })
+        },
+        async multiUpload ({ commit, dispatch, state }, { files }) {
+            commit('UPLOADING_STATUS', { status: true })
+            let toResolve = files.map(item => dispatch('upload', { file: item }))
+            return new Promise((resolve, reject) => {
+                Promise.all(toResolve).then((result) => {
+                    commit('UPLOADING_STATUS', { status: false })
+                    resolve()
+                }).catch((error) => {
+                    commit('UPLOADING_STATUS', { status: false })
+                    reject()
+                })
+            })
+        },
+        async upload ({ commit, dispatch }, { file }) {
+            return new Promise((resolve, reject) => {
+                let id = uuid.v4()
+                commit('ADD_MEDIA', { file, id: id })
+                dispatch('doUpload', { id }).then((result) => {
+                    resolve()
+                }).catch((error) => {
+                    reject()
+                })
+            })
+        },
+        async doUpload ({ commit, state, getters }, { id }) {
+            commit('START_UPLOAD', { id })
+            return new Promise((resolve, reject) => {
+                let formData = new FormData()
+                formData.append('file', getters.upload(id).file)
+
+                http.post('/manage/article/' + state.articleId + '/' + state.versionId + '/upload',
+                    formData,
+                    {
+                        onUploadProgress: (event) => {
+                            commit('UPLOAD_PROGRESS', { progress: Math.floor(event.loaded / event.total) * 100, id })
+                        },
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then((result) => {
+                    commit('SUCCESS_UPLOAD', { id, file: result.data })
+                    resolve()
+                }).catch((error) => {
+                    commit('FAIL_UPLOAD', { id })
+                    reject()
+                })
+            })
+        },
+        async doDelete ({ commit, state, getters }, { id }) {
+            commit('START_DELETE', { id })
+            return new Promise((resolve, reject) => {
+                http.delete('/manage/article/' + state.articleId + '/' + state.versionId + '/upload/' + id).then((result) => {
+                    commit('SUCCESS_DELETE', { id })
+                    resolve()
+                }).catch((error) => {
+                    commit('FAIL_DELETE', { id })
+                    reject()
+                })
+            })
+        },
+        async localDelete ({ commit }, { id }) {
+            commit('START_DELETE', { id })
+            return new Promise((resolve, reject) => {
+                commit('SUCCESS_DELETE', { id })
+                resolve()
+            })
+        },
+        async doDownload ({ commit, state }, { id }) {
+            commit('START_DOWNLOAD', { id })
+            return new Promise((resolve, reject) => {
+                http.get('/manage/article/' + state.articleId + '/' + state.versionId + '/upload/' + id).then((result) => {
+                    window.open(result.data.url, '_blank')
+                    commit('SUCCESS_DOWNLOAD', { id })
+                    resolve()
+                }).catch((error) => {
+                    commit('FAIL_DOWNLOAD', { id })
+                    reject()
+                })
             })
         }
     },
@@ -239,6 +335,153 @@ export default {
         },
         REORDER_FIELD (state, { items, slug }) {
             state.fields[slug].items.splice(0, items.length, ...items)
+        },
+        CLEAR_MEDIA (state) {
+            state.media.busUuid = uuid.v4()
+            state.media.uploads.splice(0)
+            state.media.uploading = false
+        },
+        PUSH_MEDIA (state, { media }) {
+            for (let i = 0; i < media.length; i++) {
+
+                let file = media[i]
+
+                let item = {
+                    id: file.id,
+                    model_type: file.model_type,
+                    model_id: file.model_id,
+                    collection_name: file.collection_name,
+                    name: file.name,
+                    file_name: file.file_name,
+                    mime_type: file.mime_type,
+                    disk: file.disk,
+                    size: file.size,
+                    manipulations: file.manipulations,
+                    custom_properties: file.custom_properties,
+                    order_column: file.order_column,
+                    created_at: file.created_at,
+                    updated_at: file.updated_at,
+                    status: 'uploaded',
+                    message: 'Uploaded',
+                    progress: 100
+                }
+
+                state.media.uploads.push(item)
+            }
+        },
+        UPLOADING_STATUS (state, { status }) {
+            state.media.uploading = status
+        },
+        ADD_MEDIA (state, { file, id }) {
+            let newFile = {
+                id: id,
+                name: null,
+                file_name: file.name,
+                mime_type: file.type,
+                size: file.size,
+                file: file,
+                status: 'new',
+                message: 'Not Yet Uploaded',
+                progress: 0
+            }
+
+            state.media.uploads.push(newFile)
+        },
+        START_UPLOAD (state, { id }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.status = 'uploading'
+            item.message = 'Uploading...'
+            item.progress = 0
+        },
+        SUCCESS_UPLOAD (state, { id, file }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            Vue.set(item, 'id', file.id)
+            Vue.set(item, 'model_type', file.model_type)
+            Vue.set(item, 'model_id', file.model_id)
+            Vue.set(item, 'collection_name', file.collection_name)
+            Vue.set(item, 'name', file.name)
+            Vue.set(item, 'file_name', file.file_name)
+            Vue.set(item, 'mime_type', file.mime_type)
+            Vue.set(item, 'disk', file.disk)
+            Vue.set(item, 'size', file.size)
+            Vue.set(item, 'manipulations', file.manipulations)
+            Vue.set(item, 'custom_properties', file.custom_properties)
+            Vue.set(item, 'order_column', file.order_column)
+            Vue.set(item, 'created_at', file.created_at)
+            Vue.set(item, 'updated_at', file.updated_at)
+
+            item.status = 'uploaded'
+            item.message = 'Uploaded!'
+            item.progress = 100
+        },
+        FAIL_UPLOAD (state, { id }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.status = 'upload-failed'
+            item.message = 'Upload failed!'
+            item.progress = 0
+        },
+        UPLOAD_PROGRESS (state, { id, progress }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.progress = progress
+        },
+        START_DELETE (state, { id }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.status = 'deleting'
+            item.message = 'Deleting...'
+        },
+        SUCCESS_DELETE (state, { id }) {
+            let itemIndex = state.media.uploads.findIndex((item) => {
+                return item.id === id
+            })
+
+            state.media.uploads.splice(itemIndex, 1)
+        },
+        FAIL_DELETE (state, { id }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.status = 'delete-failed'
+            item.message = 'Deletion failed!'
+        },
+        START_DOWNLOAD (state, { id }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.status = 'downloading'
+            item.message = 'Downloading...'
+        },
+        SUCCESS_DOWNLOAD (state, { id }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.status = 'uploaded'
+            item.message = 'Downloaded!'
+        },
+        FAIL_DOWNLOAD (state, { id }) {
+            let item = state.media.uploads.find((item) => {
+                return item.id === id
+            })
+
+            item.status = 'uploaded'
+            item.message = 'Download failed!'
         }
     }
 }

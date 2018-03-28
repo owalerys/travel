@@ -44,7 +44,7 @@ class ArticleController extends Controller
 
     public function retrieve($article, Request $request)
     {
-        $retrievedArticle = Article::with(['topic', 'versions.author'])->find($article);
+        $retrievedArticle = Article::with(['topic', 'versions.author', 'versions.media'])->find($article);
 
         if (!$retrievedArticle) {
             return response('Article not found', 404);

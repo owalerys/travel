@@ -25,13 +25,13 @@
                                 </v-card-text>
                             </v-card>
                         </v-expansion-panel-content>
-                        <v-expansion-panel-content v-if="content.type === 'content' && false">
+                        <v-expansion-panel-content v-if="content.type === 'content'">
                             <div slot="header">
                                 File Uploads
                             </div>
                             <v-card>
                                 <v-card-text>
-                                    Upload component goes here
+                                    <travel-uploader :article-id="$route.params.article_id" :version="content.versionId"></travel-uploader>
                                 </v-card-text>
                             </v-card>
                         </v-expansion-panel-content>
@@ -131,6 +131,7 @@
     import Items from 'Travel/components/content/editor/Items'
     import Article from 'Travel/components/content/view/Article'
     import MessageBus from 'Travel/components/MessageBus'
+    import Uploader from 'Travel/components/content/editor/Uploader'
     import Vue from 'vue'
 
     export default {
@@ -252,7 +253,8 @@
         components: {
             'travel-items': Items,
             'travel-article': Article,
-            'message-bus': MessageBus
+            'message-bus': MessageBus,
+            'travel-uploader': Uploader
         }
     }
 </script>

@@ -17,8 +17,12 @@ class PermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()['cache']->forget('spatie.permission.cache');
 
+        // general permissions
+        Permission::findOrCreate('load app');
+
         // content management permissions
         Permission::findOrCreate('create articles');
+        Permission::findOrCreate('view articles');
         Permission::findOrCreate('edit articles');
         Permission::findOrCreate('delete articles');
         Permission::findOrCreate('publish articles');
@@ -38,19 +42,19 @@ class PermissionSeeder extends Seeder
 
         // create roles and assign existing permissions
         $role = $this->makeRole('author');
-        $role->syncPermissions(['edit articles', 'delete articles', 'create articles']);
+        $role->syncPermissions(['view articles', 'edit articles', 'delete articles', 'create articles', 'load app']);
 
         $role = $this->makeRole('editor');
-        $role->syncPermissions(['publish articles', 'retire articles', 'review articles', 'review own articles']);
+        $role->syncPermissions(['view articles', 'publish articles', 'retire articles', 'review articles', 'review own articles', 'load app']);
 
         $role = $this->makeRole('administrator');
-        $role->syncPermissions(['manage users', 'manage permissions']);
+        $role->syncPermissions(['manage users', 'manage permissions', 'load app']);
 
         $role = $this->makeRole('end user');
-        $role->syncPermissions(['search articles', 'read articles']);
+        $role->syncPermissions(['search articles', 'read articles', 'load app']);
 
         $role = $this->makeRole('account holder');
-        $role->syncPermissions(['manage own billing', 'manage own users']);
+        $role->syncPermissions(['manage own billing', 'manage own users', 'load app']);
     }
 
     /**

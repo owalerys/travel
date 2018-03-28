@@ -1,5 +1,4 @@
 import axios from 'Travel/http'
-import editor from './editor'
 import manage from './manage'
 
 export default {
@@ -155,7 +154,6 @@ export default {
         }
     },
     modules: {
-        editor,
         manage
     }
 }
