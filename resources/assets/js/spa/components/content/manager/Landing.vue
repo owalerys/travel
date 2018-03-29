@@ -84,7 +84,7 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn flat color="green" :disabled="!topic || !airline" @click="newDialog = !newDialog">Create New Article</v-btn>
+                                <v-btn flat color="green" :disabled="!topic || !topic.slug || !airline" @click="newDialog = !newDialog">Create New Article</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-flex>
@@ -157,6 +157,10 @@
         },
         computed: {
             schema () {
+                if (this.topic.version === undefined || this.topic.version === null || this.topic.slug === undefined || this.topic.slug === null) {
+                    return {}
+                }
+
                 return this.fetchSchema(this.topic.version, this.topic.slug)
             },
             types () {

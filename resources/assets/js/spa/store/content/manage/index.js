@@ -56,20 +56,8 @@ export default {
                     commit('RESET_FORM')
                     resolve()
                 }).catch((error) => {
-                    let genericError = true
-
-                    if (error.response.data.errors && error.response.data.errors instanceof Object) {
-                        for (let prop in error.response.data.errors) {
-                            if (error.response.data.errors.hasOwnProperty(prop)) {
-                                genericError = false
-                                dispatch('messages/write', { type: 'error', message: prop + ': ' + error.response.data.errors[prop], busUuid: state.creation.busUuid, timeout: 10000 }, { root: true })
-                            }
-                        }
-                    }
-
-                    if (genericError) {
-                        dispatch('messages/write', { type: 'error', message: 'An unexpected error occurred. Please try again or contact IT.', busUuid: state.creation.busUuid, timeout: 10000 }, { root: true })
-                    }
+                    dispatch('messages/write', { type: 'error', message: error.response.data.message || 'An unexpected error occurred...', busUuid: state.creation.busUuid, timeout: 10000 }, { root: true })
+                    dispatch('messages/writeFromErrorBag', { busUuid: state.creation.busUuid, timeout: 10000, bag: error.response.data.errors || {} }, { root: true })
 
                     commit('UPDATE_CREATING', { status: false })
                     reject(error)
@@ -92,7 +80,7 @@ export default {
             state.airline = airline_id
         },
         UPDATE_TOPIC (state, { topic }) {
-            Vue.set(state, 'topic', topic)
+            Vue.set(state, 'topic', topic || {})
         },
         UPDATE_TYPE (state, { type }) {
             state.creation.type = type

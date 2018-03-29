@@ -155,7 +155,7 @@ export default {
                 })
             })
         },
-        async upload ({ commit, dispatch }, { file }) {
+        async upload ({ commit, dispatch, state }, { file }) {
             return new Promise((resolve, reject) => {
                 let id = uuid.v4()
                 commit('ADD_MEDIA', { file, id: id })
@@ -166,7 +166,7 @@ export default {
                 })
             })
         },
-        async doUpload ({ commit, state, getters }, { id }) {
+        async doUpload ({ commit, state, getters, dispatch }, { id }) {
             commit('START_UPLOAD', { id })
             return new Promise((resolve, reject) => {
                 let formData = new FormData()
@@ -186,7 +186,9 @@ export default {
                     resolve()
                 }).catch((error) => {
                     commit('FAIL_UPLOAD', { id })
-                    reject()
+                    dispatch('messages/write', { type: 'error', message: error.response.data.message || 'An unknown error occurred...', timeout: 10000, busUuid: state.media.busUuid }, { root: true })
+                    dispatch('messages/writeFromErrorBag', { bag: error.response.data.errors || {}, timeout: 10000, busUuid: state.media.busUuid }, { root: true })
+                    reject(error)
                 })
             })
         },

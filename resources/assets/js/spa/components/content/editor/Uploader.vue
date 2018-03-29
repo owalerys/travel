@@ -1,5 +1,6 @@
 <template>
     <div>
+        <message-bus :bus-uuid="busUuid"></message-bus>
         <v-data-table :items="uploads" :headers="headers" hide-actions>
             <template slot="items" slot-scope="props">
                 <td>{{ props.item.file_name }}</td>
@@ -41,6 +42,7 @@
 
 <script>
     import { mapGetters, mapActions, mapState } from 'vuex'
+    import MessageBus from 'Travel/components/MessageBus'
 
     export default {
         data () {
@@ -76,7 +78,8 @@
         computed: {
             ...mapState('content/manage/overview/editor', {
                 uploads: state => state.media.uploads,
-                massUploading: state => state.media.uploading
+                massUploading: state => state.media.uploading,
+                busUuid: state => state.media.busUuid
             })
         },
         methods: {
@@ -121,6 +124,9 @@
                     return humanSize(size, Math.pow(1024, 3), 10) + ' GB';
                 }
             }
+        },
+        components: {
+            'message-bus': MessageBus
         }
     }
 </script>

@@ -38,6 +38,39 @@ export default {
                 }
             })
         },
+        writeFromErrorBag ({ dispatch }, { busUuid, bag, timeout }) {
+            return new Promise((resolve, reject) => {
+                let promises = []
+
+                bag = bag || {}
+
+                for (let prop in bag) {
+                    if (bag.hasOwnProperty(prop)) {
+                        let errors = bag[prop] || []
+
+                        for (let i = 0; i < errors.length; i++) {
+                            promises.push(dispatch('write', {
+                                busUuid,
+                                timeout,
+                                type: 'error',
+                                message: errors[i]
+                            }))
+                        }
+                    }
+                }
+
+                if (promises.length === 0) {
+                    resolve()
+                    return
+                }
+
+                Promise.all(promises).then((result) => {
+                    resolve()
+                }).catch((error) => {
+                    reject()
+                })
+            })
+        },
         dismiss ({ commit }, { messageUuid }) {
             return new Promise((resolve, reject) => {
                 commit('VALUE_FALSE', { messageUuid })
