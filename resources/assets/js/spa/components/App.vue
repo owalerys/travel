@@ -8,6 +8,14 @@
                 <v-card-text>
                     <message-bus :bus-uuid="storeSettingsFormUuid"></message-bus>
                     <v-text-field
+                            label="Current Password"
+                            v-model="currentPassword"
+                            :type="revealCurrentPassword ? 'password' : 'text'"
+                            :append-icon="revealCurrentPassword ? 'visibility' : 'visibility_off'"
+                            :append-icon-cb="() => (revealCurrentPassword = !revealCurrentPassword)"
+                            :error-messages="fieldErrors(storeSettingsFormUuid, 'current_password')"
+                    ></v-text-field>
+                    <v-text-field
                             label="Password"
                             v-model="password"
                             hint="At least 8 characters"
@@ -111,7 +119,8 @@
                 title: 'AgentRef',
                 settingsDialog: false,
                 revealPassword: true,
-                revealConfirmation: true
+                revealConfirmation: true,
+                revealCurrentPassword: true
             }
         },
         methods: {
@@ -126,7 +135,8 @@
             },
             ...mapMutations('settings', {
                 updatePassword: 'UPDATE_PASSWORD',
-                updatePasswordConfirmation: 'UPDATE_PASSWORD_CONFIRMATION'
+                updatePasswordConfirmation: 'UPDATE_PASSWORD_CONFIRMATION',
+                updateCurrentPassword: 'UPDATE_CURRENT_PASSWORD'
             }),
             doSettingsSubmit () {
                 return this.settingsSubmit()
@@ -134,9 +144,11 @@
             closePassword () {
                 this.updatePassword({ password: null })
                 this.updatePasswordConfirmation({ password_confirmation: null })
+                this.updateCurrentPassword({ current_password: null })
                 this.settingsDialog = false
                 this.revealPassword = true
                 this.revealConfirmation = true
+                this.revealCurrentPassword = true
             }
         },
         computed: {
@@ -149,6 +161,7 @@
             ...mapState('settings', {
                 storePassword: state => state.resetPassword.password,
                 storePasswordConfirmation: state => state.resetPassword.password_confirmation,
+                storeCurrentPassword: state => state.resetPassword.current_password,
                 storeSettingsFormUuid: state => state.resetPassword.formUuid,
                 storeSettingsSubmitting: state => state.resetPassword.submitting
             }),
@@ -166,6 +179,14 @@
                 },
                 set (value) {
                     this.updatePasswordConfirmation({ password_confirmation: value })
+                }
+            },
+            currentPassword: {
+                get () {
+                    return this.storeCurrentPassword
+                },
+                set (value) {
+                    this.updateCurrentPassword({ current_password: value })
                 }
             }
         },

@@ -6,6 +6,7 @@ export default {
     state () {
         return {
             resetPassword: {
+                current_password: null,
                 password: null,
                 password_confirmation: null,
                 formUuid: uuid.v4(),
@@ -19,6 +20,7 @@ export default {
                 commit('PASSWORD_SUBMISSION_STATUS', { status: true })
                 dispatch('validation/flush', { formUuid: state.resetPassword.formUuid }, { root: true })
                 http.patch('/profile/password', {
+                    current_password: state.resetPassword.current_password,
                     password: state.resetPassword.password,
                     password_confirmation: state.resetPassword.password_confirmation
                 }).then((result) => {
@@ -35,6 +37,9 @@ export default {
         }
     },
     mutations: {
+        UPDATE_CURRENT_PASSWORD (state, { current_password }) {
+            state.resetPassword.current_password = current_password
+        },
         UPDATE_PASSWORD (state, { password }) {
             state.resetPassword.password = password
         },
