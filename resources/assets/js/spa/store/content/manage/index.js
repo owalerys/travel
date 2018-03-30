@@ -11,6 +11,7 @@ export default {
             airline: null,
             results: [],
             searching: false,
+            searchingArchives: false,
             creating: false,
             topic: {},
             creation: {
@@ -24,7 +25,7 @@ export default {
         }
     },
     actions: {
-        search ({ commit, state }) {
+        search ({ commit, state, dispatch }) {
             return new Promise((resolve, reject) => {
                 commit('UPDATE_SEARCHING', { status: true })
                 commit('PUSH_RESULTS', { articles: [] })
@@ -33,7 +34,24 @@ export default {
                     commit('PUSH_RESULTS', { articles: result.data })
                     resolve()
                 }).catch((error) => {
+                    dispatch('messages/write', { busUuid: state.busUuid, message: error.response.data.message || 'An unexpected error occurred...', timeout: 10000, type: 'error' }, { root: true })
                     commit('UPDATE_SEARCHING', { status: false })
+                    commit('PUSH_RESULTS', { articles: [] })
+                    reject(error)
+                })
+            })
+        },
+        searchArchives ({ commit, state, dispatch }) {
+            return new Promise((resolve, reject) => {
+                commit('UPDATE_SEARCHING_ARCHIVES', { status: true })
+                commit('PUSH_RESULTS', { articles: [] })
+                http.post('/content/articles/archive', { airline_id: state.airline }).then((result) => {
+                    commit('UPDATE_SEARCHING_ARCHIVES', { status: false })
+                    commit('PUSH_RESULTS', { articles: result.data })
+                    resolve()
+                }).catch((error) => {
+                    dispatch('messages/write', { busUuid: state.busUuid, message: error.response.data.message || 'An unexpected error occurred...', timeout: 10000, type: 'error' }, { root: true })
+                    commit('UPDATE_SEARCHING_ARCHIVES', { status: false })
                     commit('PUSH_RESULTS', { articles: [] })
                     reject(error)
                 })
@@ -72,6 +90,9 @@ export default {
         },
         UPDATE_SEARCHING (state, { status }) {
             state.searching = status
+        },
+        UPDATE_SEARCHING_ARCHIVES (state, { status }) {
+            state.searchingArchives = status
         },
         UPDATE_CREATING (state, { status }) {
             state.creating = status

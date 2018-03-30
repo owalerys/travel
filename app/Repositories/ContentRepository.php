@@ -35,10 +35,18 @@ class ContentRepository extends Repository
         if ($airlineId) {
             $activeArticles->where('topic_id', '=', $airlineId);
             $activeArticles->where('topic_type', '=', 'airlines');
+        }
 
-            /*$activeArticles->whereHas('topic', function ($query) use ($airlineId) {
-                $query->where('id', '=', $airlineId);
-            });*/
+        return $activeArticles->get();
+    }
+
+    public function getArchivedArticles($airlineId = null)
+    {
+        $activeArticles = Article::where('active', '=', '0');
+
+        if ($airlineId) {
+            $activeArticles->where('topic_id', '=', $airlineId);
+            $activeArticles->where('topic_type', '=', 'airlines');
         }
 
         return $activeArticles->get();

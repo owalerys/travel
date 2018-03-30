@@ -37,6 +37,38 @@ class ArticleController extends Controller
         return response()->json($article->toArray());
     }
 
+    public function archive($article)
+    {
+        $article = Article::where('id', '=', $article)->with('versions.author')->first();
+
+        if (!$article) {
+            abort(404, 'Article not found.');
+        }
+
+        $this->authorize('archive', $article);
+
+        $article->active = false;
+        $article->save();
+
+        return response()->json($article);
+    }
+
+    public function activate($article)
+    {
+        $article = Article::where('id', '=', $article)->with('versions')->first();
+
+        if (!$article) {
+            abort(404, 'Article not found.');
+        }
+
+        $this->authorize('activate', $article);
+
+        $article->active = true;
+        $article->save();
+
+        return response()->json($article);
+    }
+
     public function status($article)
     {
 
@@ -47,7 +79,7 @@ class ArticleController extends Controller
         $retrievedArticle = Article::with(['topic', 'versions.author', 'versions.media'])->find($article);
 
         if (!$retrievedArticle) {
-            return response('Article not found', 404);
+            abort(404, 'Article not found.');
         }
 
         return response()->json($retrievedArticle);

@@ -53,6 +53,15 @@ class ContentController extends Controller
         return response()->json($contentRepository->getActiveArticles($request->input('airline_id')));
     }
 
+    public function archivedArticles(ContentRepository $contentRepository, Request $request)
+    {
+        $request->validate([
+            'airline_id' => 'required|exists:airlines,id'
+        ]);
+
+        return response()->json($contentRepository->getArchivedArticles($request->input('airline_id')));
+    }
+
     public function countries()
     {
         return response()->json([

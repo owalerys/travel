@@ -31,7 +31,7 @@
                     <message-bus :bus-uuid="storeBusUuidMain"></message-bus>
                     <v-card light color="white">
                         <v-card-text>
-                            <v-layout row wrap>
+                            <v-layout row>
                                 <v-flex xs12>
                                     <v-select
                                             :items="airlines"
@@ -54,7 +54,8 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn flat color="blue" @click="runSearch" :loading="storeSearching" :disabled="!airline">Search</v-btn>
+                            <v-btn flat color="grey" @click="runArchiveSearch" :loading="storeSearchingArchives" :disabled="!airline || storeSearching">Archives Only</v-btn>
+                            <v-btn flat color="blue" @click="runSearch" :loading="storeSearching" :disabled="!airline || storeSearchingArchives">Search Active Content</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-flex>
@@ -207,6 +208,7 @@
             ...mapState('content/manage', {
                 storeAirline: (state) => state.airline,
                 storeSearching: (state) => state.searching,
+                storeSearchingArchives: (state) => state.searchingArchives,
                 storeTopic: (state) => state.topic,
                 storeCreating: (state) => state.creating,
                 storeBusUuid: (state) => state.creation.busUuid,
@@ -276,10 +278,12 @@
                 setTitle: 'UPDATE_TITLE',
                 setUrl: 'UPDATE_URL',
                 setDescription: 'UPDATE_DESCRIPTION',
-                setType: 'UPDATE_TYPE'
+                setType: 'UPDATE_TYPE',
+                setArchived: 'UPDATE_ARCHIVED'
             }),
             ...mapActions('content/manage', {
                 runSearch: 'search',
+                runArchiveSearch: 'searchArchives',
                 create: 'create'
             }),
             doCreate () {

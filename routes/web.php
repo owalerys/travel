@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', 'ContentController@articles');
             Route::get('/live', 'ContentController@liveArticles');
             Route::post('/active', 'ContentController@activeArticles');
+            Route::post('/archive', 'ContentController@archivedArticles');
         });
 
         Route::prefix('countries')->group(function () {
@@ -78,7 +79,8 @@ Route::middleware(['auth'])->group(function () {
              * Article Index Creation/Modification/Retrieval
              */
             Route::post('/', 'ArticleController@create');
-            Route::patch('/{article}/status', 'ArticleController@status');
+            Route::patch('/{article}/archive', 'ArticleController@archive');
+            Route::patch('/{article}/activate', 'ArticleController@activate');
             Route::get('/{article}', 'ArticleController@retrieve');
 
             /**

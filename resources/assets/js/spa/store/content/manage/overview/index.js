@@ -10,7 +10,8 @@ export default {
             article_id: null,
             article: null,
             loading: false,
-            busUuid: uuid.v4()
+            busUuid: uuid.v4(),
+            modifyingStatus: false
         }
     },
     actions: {
@@ -34,6 +35,34 @@ export default {
         },
         refresh ({ dispatch, state }) {
             return dispatch('fetch', { article_id: state.article_id })
+        },
+        archive ({ commit, state, dispatch }) {
+            commit('START_MODIFYING_STATUS')
+            return new Promise((resolve, reject) => {
+                http.patch('/manage/article/' + state.article_id + '/archive', {}).then((result) => {
+                    dispatch('messages/write', { type: 'success', message: 'Article archived successfully.', timeout: 10000, busUuid: state.busUuid }, { root: true })
+                    commit('STOP_MODIFYING_STATUS')
+                    resolve()
+                }).catch((error) => {
+                    dispatch('messages/write', { type: 'error', message: error.response.data.message || 'An unknown error occurred...', timeout: 10000, busUuid: state.busUuid }, { root: true })
+                    commit('STOP_MODIFYING_STATUS')
+                    reject()
+                })
+            })
+        },
+        activate ({ commit, state, dispatch }) {
+            commit('START_MODIFYING_STATUS')
+            return new Promise((resolve, reject) => {
+                http.patch('/manage/article/' + state.article_id + '/activate', {}).then((result) => {
+                    dispatch('messages/write', { type: 'success', message: 'Article re-activated successfully.', timeout: 10000, busUuid: state.busUuid }, { root: true })
+                    commit('STOP_MODIFYING_STATUS')
+                    resolve()
+                }).catch((error) => {
+                    dispatch('messages/write', { type: 'error', message: error.response.data.message || 'An unknown error occurred...', timeout: 10000, busUuid: state.busUuid }, { root: true })
+                    commit('STOP_MODIFYING_STATUS')
+                    reject()
+                })
+            })
         }
     },
     mutations: {
@@ -45,6 +74,12 @@ export default {
         },
         UPDATE_LOADING (state, { status }) {
             state.loading = status
+        },
+        START_MODIFYING_STATUS (state) {
+            state.modifyingStatus = true
+        },
+        STOP_MODIFYING_STATUS (state) {
+            state.modifyingStatus = false
         }
     },
     modules: {

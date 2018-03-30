@@ -25,6 +25,7 @@ class PermissionSeeder extends Seeder
         Permission::findOrCreate('view articles');
         Permission::findOrCreate('edit articles');
         Permission::findOrCreate('delete articles');
+        Permission::findOrCreate('manage articles');
         Permission::findOrCreate('publish articles');
         Permission::findOrCreate('retire articles');
         Permission::findOrCreate('review articles');

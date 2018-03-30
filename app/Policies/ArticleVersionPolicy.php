@@ -19,7 +19,7 @@ class ArticleVersionPolicy
      */
     public function view(User $user, ArticleVersion $articleVersion)
     {
-        //
+        return $user->hasPermissionTo('view articles');
     }
 
     /**

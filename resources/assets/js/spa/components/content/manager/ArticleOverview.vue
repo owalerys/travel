@@ -27,6 +27,10 @@
                             </template>
                         </v-data-table>
                     </v-card-text>
+                    <v-card-actions>
+                        <v-btn flat color="green" v-if="canActivate" @click.stop="activate" :loading="modifyingStatus">Re-activate</v-btn>
+                        <v-btn flat color="red" v-if="canArchive" @click.stop="archive" :loading="modifyingStatus">Archive</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-flex>
             <v-flex xs12 md8 v-if="!loading && article">
@@ -149,7 +153,8 @@
             ...mapState('content/manage/overview', {
                 article: state => state.article,
                 busUuid: state => state.busUuid,
-                loading: state => state.loading
+                loading: state => state.loading,
+                modifyingStatus: state => state.modifyingStatus
             }),
             summary () {
                 let summary = []
@@ -206,15 +211,44 @@
             },
             articleAvailable () {
                 return !!this.article
+            },
+            canArchive () {
+                let anyActive = false
+                for (let i = 0; i < this.versions.length; i++) {
+                    if (this.versions[i].status === 'live') {
+                        anyActive = true
+                    }
+                }
+
+                return this.article.active && anyActive === false && this.versions.length
+            },
+            canActivate () {
+                return !this.article.active
             }
         },
         methods: {
             ...mapActions({
                 fetchArticle: 'content/manage/overview/fetch',
-                refreshArticle: 'content/manage/overview/refresh'
+                refreshArticle: 'content/manage/overview/refresh',
+                activateArticle: 'content/manage/overview/activate',
+                archiveArticle: 'content/manage/overview/archive'
             }),
             copyVersion (versionId) {
 
+            },
+            archive () {
+                this.archiveArticle().then((result) => {
+                    this.refreshArticle()
+                }).catch((error) => {
+
+                })
+            },
+            activate () {
+                this.activateArticle().then((result) => {
+                    this.refreshArticle()
+                }).catch((error) => {
+
+                })
             }
         },
         components: {
