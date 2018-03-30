@@ -17,7 +17,7 @@ class ArticleController extends Controller
             'title' => 'string|max:255|nullable',
             'category_slug' => 'string|required|max:255',
             'schema_version' => 'string|required|max:255',
-            'url' => 'url|active_url|nullable',
+            'url' => 'url|nullable|required_if:type,link',
             'type' => 'required|string|max:255',
             'description' => 'string|nullable',
             'airline_id' => 'required|exists:airlines,id'
