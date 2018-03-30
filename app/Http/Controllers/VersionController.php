@@ -19,8 +19,21 @@ class VersionController extends Controller
         $articleVersion = ArticleVersion
             ::where('article_id', '=', $article)
             ->where('id', '=', $version)
-            ->with(['article', 'author'])
+            ->with(['article.versions', 'author'])
             ->first();
+
+        // Update the main article if there is only one version
+        if ($articleVersion->article->versions->count() === 1) {
+            $article = $articleVersion->article;
+
+            $article->display_title = $request->input('content.title');
+            $article->display_description = $request->input('content.description');
+            $article->type = $request->input('content.type');
+            $article->schema_version = $request->input('content.schema_version');
+            $article->category_slug = $request->input('content.category_slug');
+
+            $article->save();
+        }
 
         $articleVersion->title = $request->input('content.title');
         $articleVersion->description = $request->input('content.description');
