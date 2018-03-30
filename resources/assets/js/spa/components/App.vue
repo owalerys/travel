@@ -16,7 +16,7 @@
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'current_password')"
                     ></v-text-field>
                     <v-text-field
-                            label="Password"
+                            label="New Password"
                             v-model="password"
                             hint="At least 8 characters"
                             min="8"
@@ -27,7 +27,7 @@
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'password')"
                     ></v-text-field>
                     <v-text-field
-                            label="Password Confirmation"
+                            label="New Password Confirmation"
                             v-model="passwordConfirmation"
                             counter
                             type="password"

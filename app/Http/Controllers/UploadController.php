@@ -79,7 +79,8 @@ class UploadController extends Controller
 
         $request->validate([
             'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string|max:1000'
+            'description' => 'nullable|string|max:1000',
+            'internal' => 'required|boolean'
         ]);
 
         if ($title = $request->input('title')) {
@@ -93,6 +94,8 @@ class UploadController extends Controller
         } else {
             $media->forgetCustomProperty('description');
         }
+
+        $media->setCustomProperty('internal', (bool) $request->input('internal'));
 
         $media->save();
 

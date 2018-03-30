@@ -21,7 +21,15 @@ export default {
             media: {
                 busUuid: uuid.v4(),
                 uploads: [],
-                uploading: false
+                uploading: false,
+                dialog: {
+                    id: null,
+                    title: null,
+                    description: null,
+                    internal: false,
+                    busUuid: uuid.v4(),
+                    submitting: false
+                }
             }
         }
     },
@@ -60,6 +68,9 @@ export default {
             }
 
             return {}
+        },
+        dialogUpload (state, getters) {
+            return getters.upload(state.media.dialog.id) || {}
         }
     },
     actions: {
@@ -220,6 +231,38 @@ export default {
                     resolve()
                 }).catch((error) => {
                     commit('FAIL_DOWNLOAD', { id })
+                    reject()
+                })
+            })
+        },
+        async editProperties ({ commit, getters }, { id }) {
+            return new Promise((resolve, reject) => {
+                let upload = getters.upload(id)
+
+                commit('SET_PROPERTIES_DIALOG', { upload })
+
+                resolve()
+            })
+        },
+        async doPropertiesSubmit ({ commit, state, dispatch, getters }) {
+            return new Promise((resolve, reject) => {
+                commit('START_PROPERTIES')
+                http.patch('/manage/article/' + state.articleId + '/' + state.versionId + '/upload/' + state.media.dialog.id, {
+                    title: state.media.dialog.title,
+                    description: state.media.dialog.description,
+                    internal: state.media.dialog.internal
+                }).then((result) => {
+                    dispatch('messages/write', { type: 'success', message: 'Successfully updated!', busUuid: state.media.dialog.busUuid, timeout: 5000 }, { root: true })
+
+                    commit('UPDATE_CUSTOM_PROPERTIES', { upload: getters.dialogUpload, custom_properties: result.data.custom_properties })
+
+                    commit('SUCCESS_PROPERTIES')
+                    resolve()
+                }).catch((error) => {
+                    dispatch('messages/write', { type: 'error', message: error.result.data.message || 'An unexpected error occurred...', busUuid: state.media.dialog.busUuid, timeout: 5000 }, { root: true })
+                    dispatch('validation/load', { formUuid: state.media.dialog.busUuid, errors: error.result.data.errors || {} }, { root: true })
+
+                    commit('FAIL_PROPERTIES')
                     reject()
                 })
             })
@@ -484,6 +527,40 @@ export default {
 
             item.status = 'uploaded'
             item.message = 'Download failed!'
+        },
+        SET_PROPERTIES_DIALOG (state, { upload }) {
+            upload = upload || {}
+
+            state.media.dialog.id = upload.id || null
+
+            let custom_properties = upload.custom_properties || {}
+
+            state.media.dialog.description = custom_properties.description || null
+            state.media.dialog.title = custom_properties.title || null
+            state.media.dialog.internal = custom_properties.internal || false
+        },
+        UPDATE_TITLE_PROPERTY (state, { title }) {
+            state.media.dialog.title = title
+        },
+        UPDATE_DESCRIPTION_PROPERTY (state, { description }) {
+            state.media.dialog.description = description
+        },
+        UPDATE_INTERNAL_PROPERTY (state, { internal }) {
+            state.media.dialog.internal = internal
+        },
+        START_PROPERTIES (state) {
+            state.media.dialog.submitting = true
+        },
+        SUCCESS_PROPERTIES (state) {
+            state.media.dialog.submitting = false
+        },
+        FAIL_PROPERTIES (state) {
+            state.media.dialog.submitting = false
+        },
+        UPDATE_CUSTOM_PROPERTIES (state, { upload, custom_properties }) {
+            Vue.set(upload.custom_properties, 'title', custom_properties.title || null)
+            Vue.set(upload.custom_properties, 'description', custom_properties.description || null)
+            Vue.set(upload.custom_properties, 'internal', custom_properties.internal || null)
         }
     }
 }
