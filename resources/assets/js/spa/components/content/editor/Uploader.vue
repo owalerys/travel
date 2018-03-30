@@ -50,6 +50,8 @@
                            @click="doDownload({ id: props.item.id })"
                     ><v-icon>file_download</v-icon></v-btn>
                     <v-btn flat icon color="red" v-if="props.item.status === 'upload-failed'" @click="doUpload({ id: props.item.id })"><v-icon>refresh</v-icon></v-btn>
+                    <v-btn flat icon color="grey" v-if="props.item.status === 'uploaded'" @click.stop="openDialog(props.item.id)"><v-icon>settings</v-icon></v-btn>
+                    <v-spacer></v-spacer>
                     <v-btn
                             flat icon color="grey"
                             v-if="props.item.status === 'uploaded' || props.item.status === 'delete-failed' || props.item.status === 'deleting'"
@@ -62,7 +64,6 @@
                             :loading="props.item.status === 'deleting'"
                             @click="localDelete({ id: props.item.id })"
                     ><v-icon>delete_forever</v-icon></v-btn>
-                    <v-btn flat icon color="grey" v-if="props.item.status === 'uploaded'" @click.stop="openDialog(props.item.id)"><v-icon>settings</v-icon></v-btn>
                 </td>
             </template>
         </v-data-table>
