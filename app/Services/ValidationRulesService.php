@@ -165,9 +165,9 @@ class ValidationRulesService
         $this->setRule('type', ['required', 'string', Rule::in($this->category->getTypeArray())]);
 
         if ($this->category->isLinkOnly()) {
-            $this->setRule('url', ['url', 'string', 'required']);
+            $this->setRule('url', ['url', 'active_url', 'string', 'required']);
         } else {
-            $this->setRule('url', ['url', 'string', 'nullable']);
+            $this->setRule('url', ['url', 'active_url', 'string', 'nullable']);
         }
     }
 
@@ -231,6 +231,7 @@ class ValidationRulesService
                     break;
                 case 'url':
                     $ruleArray[] = 'url';
+                    $ruleArray[] = 'active_url';
                     break;
                 case 'email':
                     $ruleArray[] = 'email';
