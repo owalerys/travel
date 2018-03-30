@@ -14,6 +14,7 @@
                             :append-icon="revealCurrentPassword ? 'visibility' : 'visibility_off'"
                             :append-icon-cb="() => (revealCurrentPassword = !revealCurrentPassword)"
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'current_password')"
+                            :disabled="storeSettingsSubmitting"
                     ></v-text-field>
                     <v-text-field
                             label="New Password"
@@ -25,6 +26,7 @@
                             :append-icon="revealPassword ? 'visibility' : 'visibility_off'"
                             :append-icon-cb="() => (revealPassword = !revealPassword)"
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'password')"
+                            :disabled="storeSettingsSubmitting"
                     ></v-text-field>
                     <v-text-field
                             label="New Password Confirmation"
@@ -35,6 +37,7 @@
                             :append-icon="revealConfirmation ? 'visibility' : 'visibility_off'"
                             :append-icon-cb="() => (revealConfirmation = !revealConfirmation)"
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'password_confirmation')"
+                            :disabled="storeSettingsSubmitting"
                     ></v-text-field>
                 </v-card-text>
                 <v-card-actions>
