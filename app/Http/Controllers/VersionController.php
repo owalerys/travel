@@ -6,6 +6,7 @@ use App\Http\Requests\CreateArticleIndex;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\ArticleVersion;
+use Spatie\MediaLibrary\Media;
 
 class VersionController extends Controller
 {
@@ -14,7 +15,7 @@ class VersionController extends Controller
     {
         $this->authorize('create', ArticleVersion::class);
 
-        $articleVersion = ArticleVersion::where('article_id', $article)->where('version', $version)->with(['article.versions'])->first();
+        $articleVersion = ArticleVersion::where('article_id', $article)->where('version', $version)->with(['article.versions', 'media'])->first();
 
         if (!$articleVersion) {
             abort(404);
@@ -38,6 +39,13 @@ class VersionController extends Controller
         $newVersion->create_date = Carbon::now()->format('Y-m-d H:i:s');
 
         $newVersion->save();
+
+        $articleVersion->media->each(function (Media $media) use ($newVersion) {
+            $newVersion->addMediaFromUrl($media->getTemporaryUrl(Carbon::now()->addMinutes(5)))
+                ->preservingOriginal()
+                ->withCustomProperties($media->custom_properties)
+                ->toMediaCollection($media->collection_name, $media->getDiskDriverName());
+        });
 
         return response()->json($newVersion);
     }
