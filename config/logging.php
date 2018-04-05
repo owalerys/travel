@@ -36,7 +36,7 @@ return [
         ],
 
         'bugsnag' => [
-            'driver/bugsnag'
+            'driver' => 'bugsnag'
         ],
 
         'single' => [

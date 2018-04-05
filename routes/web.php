@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('coming-soon');
 });
 
+Route::get('error-test', 'HomeController@errorTest');
+
 Route::get('/home', function () {
     return redirect()->route('spa');
 });
