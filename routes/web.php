@@ -86,8 +86,9 @@ Route::middleware(['auth'])->group(function () {
             /**
              * Article Version Creation/Modification/Retrieval
              */
-            Route::post('/{article}/{version}', 'VersionController@fork');
+            Route::post('/{article}/{version}/fork', 'VersionController@fork');
             Route::patch('/{article}/{version}', 'VersionController@update');
+            Route::patch('/{article}/{version}/archive', 'VersionController@archive');
             Route::get('/{article}/{version}', 'VersionController@retrieve');
             Route::post('/{article}/{version}/status', 'VersionController@status');
 

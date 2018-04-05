@@ -16,6 +16,7 @@ class ArticleVersion extends Model implements HasMedia
     const STATUS_APPROVED = 'approved';
     const STATUS_LIVE = 'live';
     const STATUS_RETIRED = 'retired';
+    const STATUS_ARCHIVED = 'archived';
 
     /**
      * @var array valid statuses for article versions

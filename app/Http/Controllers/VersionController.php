@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateArticleIndex;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\ArticleVersion;
 
@@ -11,7 +12,50 @@ class VersionController extends Controller
 
     public function fork($article, $version)
     {
+        $this->authorize('create', ArticleVersion::class);
 
+        $articleVersion = ArticleVersion::where('article_id', $article)->where('version', $version)->with(['article.versions'])->first();
+
+        if (!$articleVersion) {
+            abort(404);
+        }
+
+        $newVersion = new ArticleVersion;
+
+        $newVersion->article_id = $articleVersion->article_id;
+        $newVersion->parent_id = $articleVersion->id;
+        $newVersion->title = $articleVersion->title;
+        $newVersion->description = $articleVersion->description;
+        $newVersion->type = $articleVersion->type;
+        $newVersion->url = $articleVersion->url;
+        $newVersion->content = $articleVersion->content;
+        $newVersion->version = $articleVersion->article->versions->max('version') + 1;
+        $newVersion->schema_version = $articleVersion->schema_version;
+        $newVersion->category_slug = $articleVersion->category_slug;
+
+        $newVersion->author()->associate(\Auth::user());
+
+        $newVersion->create_date = Carbon::now()->format('Y-m-d H:i:s');
+
+        $newVersion->save();
+
+        return response()->json($newVersion);
+    }
+
+    public function archive($article, $version)
+    {
+        $articleVersion = ArticleVersion::where('article_id', $article)->where('version', $version)->first();
+
+        if (!$articleVersion) {
+            abort(404);
+        }
+
+        $this->authorize('archive', $articleVersion);
+
+        $articleVersion->status = ArticleVersion::STATUS_ARCHIVED;
+        $articleVersion->save();
+
+        return response()->json($articleVersion);
     }
 
     public function update($article, $version, CreateArticleIndex $request)

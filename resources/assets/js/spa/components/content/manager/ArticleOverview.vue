@@ -28,7 +28,7 @@
                         </v-data-table>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn flat color="green" v-if="canActivate" @click.stop="activate" :loading="modifyingStatus">Re-activate</v-btn>
+                        <v-btn flat color="green" v-if="canActivate" @click.stop="activate" :loading="modifyingStatus">Unarchive</v-btn>
                         <v-btn flat color="red" v-if="canArchive" @click.stop="archive" :loading="modifyingStatus">Archive</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -56,18 +56,18 @@
                                 <td>{{ props.item.status.charAt(0).toUpperCase() + props.item.status.slice(1) }}</td>
                                 <td>{{ props.item.type.charAt(0).toUpperCase() + props.item.type.slice(1) }}</td>
                                 <td>{{ props.item.author.name }}</td>
-                                <td>
+                                <td v-if="!props.item.loading">
                                     <!-- Edit -->
                                     <v-btn flat icon color="grey"
                                            :to="{ name: 'version-editor', params: { article_id: props.item.article_id, version: props.item.version, action: 'edit' } }"
-                                           v-if="user.id === props.item.author.id"
+                                           v-if="user.id === props.item.author.id && props.item.status === 'editing'"
                                     ><v-icon>mode_edit</v-icon></v-btn>
                                     <!-- Done -->
                                     <!--<v-btn flat icon color="grey"><v-icon>done</v-icon></v-btn>-->
                                     <!-- Review -->
                                     <!--<v-btn flat icon color="grey"><v-icon>mode_comment</v-icon></v-btn>-->
                                     <!-- Retire / Abandon -->
-                                    <!--<v-btn flat icon color="grey"><v-icon>archive</v-icon></v-btn>-->
+                                    <v-btn flat icon color="grey" @click="archiveVersion(props.item.version)" v-if="props.item.status === 'editing'"><v-icon>archive</v-icon></v-btn>
                                     <!-- Publish -->
                                     <!--<v-btn flat icon color="grey"><v-icon>cloud_upload</v-icon></v-btn>-->
                                     <!-- View -->
@@ -75,7 +75,10 @@
                                         :to="{ name: 'version-editor', params: { article_id: props.item.article_id, version: props.item.version, action: 'view' } }"
                                     ><v-icon>remove_red_eye</v-icon></v-btn>
                                     <!-- Copy -->
-                                    <!--<v-btn flat icon color="grey"><v-icon>content_copy</v-icon></v-btn>-->
+                                    <v-btn flat icon color="grey" @click="copyVersion(props.item.version)"><v-icon>content_copy</v-icon></v-btn>
+                                </td>
+                                <td v-else>
+                                    <v-progress-linear indeterminate></v-progress-linear>
                                 </td>
                             </template>
                         </v-data-table>
@@ -231,10 +234,23 @@
                 fetchArticle: 'content/manage/overview/fetch',
                 refreshArticle: 'content/manage/overview/refresh',
                 activateArticle: 'content/manage/overview/activate',
-                archiveArticle: 'content/manage/overview/archive'
+                archiveArticle: 'content/manage/overview/archive',
+                forkVersion: 'content/manage/overview/fork',
+                archiveVersionAction: 'content/manage/overview/versionArchive'
             }),
-            copyVersion (versionId) {
+            copyVersion (version) {
+                this.forkVersion({ version }).then((result) => {
+                    this.refreshArticle()
+                }).catch((error) => {
 
+                })
+            },
+            archiveVersion (version) {
+                this.archiveVersionAction({ version }).then((result) => {
+                    this.refreshArticle()
+                }).catch((error) => {
+
+                })
             },
             archive () {
                 this.archiveArticle().then((result) => {
