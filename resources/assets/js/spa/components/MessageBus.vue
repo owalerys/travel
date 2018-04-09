@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container fluid v-show="activeMessages">
         <v-alert
                 v-for="(message, i) in messages"
                 :type="message.type"
@@ -11,7 +11,7 @@
         >
             {{ message.message }}
         </v-alert>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -25,6 +25,15 @@
             }),
             messages () {
                 return this.getMessages(this.busUuid)
+            },
+            activeMessages () {
+                for (let i = 0; i < this.messages.length; i++) {
+                    if (this.messages[i].value) {
+                        return true
+                    }
+                }
+
+                return false
             }
         },
         methods: {

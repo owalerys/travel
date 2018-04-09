@@ -9,9 +9,10 @@
             <v-flex xs12 v-if="loading">
                 <v-progress-linear indeterminate></v-progress-linear>
             </v-flex>
-            <v-flex xs12 v-if="!loading">
-                <message-bus :bus-uuid="busUuid"></message-bus>
-            </v-flex>
+            <message-bus :bus-uuid="busUuid"></message-bus>
+            <!--<v-flex xs12 v-if="!loading">
+
+            </v-flex>-->
             <v-flex xs12 md4 v-if="!loading && article">
                 <v-card>
                     <v-card-title><div class="headline">Overview</div></v-card-title>

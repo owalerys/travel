@@ -1,120 +1,122 @@
 <template>
-    <v-layout column>
-        <v-dialog v-model="newDialog" persistent max-width="500px">
-            <v-card>
-                <v-card-title>
-                    Create a new article
-                </v-card-title>
-                <v-card-text>
-                    <message-bus :bus-uuid="storeBusUuid"></message-bus>
-                    <v-select
-                            :items="types"
-                            label="Select a content type"
-                            item-value="value"
-                            item-text="display"
-                            v-model="type"
-                    ></v-select>
-                    <v-text-field label="Custom Title" v-model="title"></v-text-field>
-                    <v-text-field label="Custom Description" multi-line v-model="description"></v-text-field>
-                    <v-text-field label="Link" required v-if="type && type === 'link'" v-model="url"></v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="primary" flat @click.stop="newDialog=false" :disabled="storeCreating">Close</v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green" flat :loading="storeCreating" @click="doCreate">Create</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <v-container fluid>
-            <v-layout row wrap>
-                <v-flex xs12>
-                    <message-bus :bus-uuid="storeBusUuidMain"></message-bus>
-                    <v-card light color="white">
-                        <v-card-text>
-                            <v-layout row>
-                                <v-flex xs12>
-                                    <v-select
-                                            :items="airlines"
-                                            :required="true"
-                                            :autocomplete="true"
-                                            item-text="search_name"
-                                            item-value="id"
-                                            v-model="airline"
-                                            label="Select"
-                                            persistent-hint
-                                            hint="Airlines"
-                                            single-line
-                                            clearable
-                                            bottom
-                                            prepend-icon="flight_takeoff"
-                                            :loading="storeSearching"
-                                    ></v-select>
-                                </v-flex>
-                            </v-layout>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn flat color="grey" @click="runArchiveSearch" :loading="storeSearchingArchives" :disabled="!airline || storeSearching">Archives Only</v-btn>
-                            <v-btn flat color="blue" @click="runSearch" :loading="storeSearching" :disabled="!airline || storeSearchingArchives">Search Active Content</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-flex>
-            </v-layout>
-            <v-container fluid grid-list-xl>
+    <v-container>
+        <v-layout column>
+            <v-dialog v-model="newDialog" persistent max-width="500px">
+                <v-card>
+                    <v-card-title>
+                        Create a new article
+                    </v-card-title>
+                    <v-card-text>
+                        <message-bus :bus-uuid="storeBusUuid"></message-bus>
+                        <v-select
+                                :items="types"
+                                label="Select a content type"
+                                item-value="value"
+                                item-text="display"
+                                v-model="type"
+                        ></v-select>
+                        <v-text-field label="Custom Title" v-model="title"></v-text-field>
+                        <v-text-field label="Custom Description" multi-line v-model="description"></v-text-field>
+                        <v-text-field label="Link" required v-if="type && type === 'link'" v-model="url"></v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" flat @click.stop="newDialog=false" :disabled="storeCreating">Close</v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green" flat :loading="storeCreating" @click="doCreate">Create</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-container fluid>
                 <v-layout row wrap>
                     <v-flex xs12>
-                        <v-card>
+                        <message-bus :bus-uuid="storeBusUuidMain"></message-bus>
+                        <v-card light color="white">
                             <v-card-text>
-                                <v-select
-                                        :items="search"
-                                        :required="true"
-                                        :autocomplete="true"
-                                        v-model="topic"
-                                        label="Select"
-                                        persistent-hint
-                                        hint="Topics to create"
-                                        item-text="display"
-                                        item-value="reference"
-                                        single-line
-                                        bottom
-                                        clearable
-                                        prepend-icon="library_books"
-                                        :disabled="!airline"
-                                >
-                                </v-select>
+                                <v-layout row>
+                                    <v-flex xs12>
+                                        <v-select
+                                                :items="airlines"
+                                                :required="true"
+                                                :autocomplete="true"
+                                                item-text="search_name"
+                                                item-value="id"
+                                                v-model="airline"
+                                                label="Select"
+                                                persistent-hint
+                                                hint="Airlines"
+                                                single-line
+                                                clearable
+                                                bottom
+                                                prepend-icon="flight_takeoff"
+                                                :loading="storeSearching"
+                                        ></v-select>
+                                    </v-flex>
+                                </v-layout>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn flat color="green" :disabled="!topic || !topic.slug || !airline" @click="newDialog = !newDialog">Create New Article</v-btn>
+                                <v-btn flat color="grey" @click="runArchiveSearch" :loading="storeSearchingArchives" :disabled="!airline || storeSearching">Archives Only</v-btn>
+                                <v-btn flat color="blue" @click="runSearch" :loading="storeSearching" :disabled="!airline || storeSearchingArchives">Search Active Content</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-flex>
-                    <v-flex xs12>
-                        <v-data-table
-                            :headers="headers"
-                            :results="results"
-                            class="elevation-1"
-                            :items="storeResults"
-                            :loading="storeSearching"
-                            >
-                            <template slot="items" slot-scope="props">
-                                <td>{{ fetchSchema(props.item.schema_version, props.item.category_slug).title }}</td>
-                                <td>{{ props.item.display_title ? props.item.display_title : '-' }}</td>
-                                <td>{{ props.item.type.charAt(0).toUpperCase() + props.item.type.slice(1) }}</td>
-                                <td>{{ (props.item.live) ? 'Live' : ((props.item.active) ? 'Draft' : 'Archived') }}</td>
-                                <td>
-                                    <v-btn flat color="primary"
-                                        :to="{ name: 'article-overview', params: { article_id: props.item.id } }"
-                                    >
-                                        View</v-btn>
-                                </td>
-                            </template>
-                        </v-data-table>
-                    </v-flex>
                 </v-layout>
+                <v-container fluid grid-list-xl>
+                    <v-layout row wrap>
+                        <v-flex xs12>
+                            <v-card>
+                                <v-card-text>
+                                    <v-select
+                                            :items="search"
+                                            :required="true"
+                                            :autocomplete="true"
+                                            v-model="topic"
+                                            label="Select"
+                                            persistent-hint
+                                            hint="Topics to create"
+                                            item-text="display"
+                                            item-value="reference"
+                                            single-line
+                                            bottom
+                                            clearable
+                                            prepend-icon="library_books"
+                                            :disabled="!airline"
+                                    >
+                                    </v-select>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn flat color="green" :disabled="!topic || !topic.slug || !airline" @click="newDialog = !newDialog">Create New Article</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                        <v-flex xs12>
+                            <v-data-table
+                                    :headers="headers"
+                                    :results="results"
+                                    class="elevation-1"
+                                    :items="storeResults"
+                                    :loading="storeSearching"
+                            >
+                                <template slot="items" slot-scope="props">
+                                    <td>{{ fetchSchema(props.item.schema_version, props.item.category_slug).title }}</td>
+                                    <td>{{ props.item.display_title ? props.item.display_title : '-' }}</td>
+                                    <td>{{ props.item.type.charAt(0).toUpperCase() + props.item.type.slice(1) }}</td>
+                                    <td>{{ (props.item.live) ? 'Live' : ((props.item.active) ? 'Draft' : 'Archived') }}</td>
+                                    <td>
+                                        <v-btn flat color="primary"
+                                               :to="{ name: 'article-overview', params: { article_id: props.item.id } }"
+                                        >
+                                            View</v-btn>
+                                    </td>
+                                </template>
+                            </v-data-table>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
             </v-container>
-        </v-container>
-    </v-layout>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
