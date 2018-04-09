@@ -70,6 +70,16 @@
                                 </v-card-actions>
                             </v-card>
                         </v-expansion-panel-content>
+                        <v-expansion-panel-content v-if="content.type === 'content'">
+                            <div slot="header">
+                                Uploads
+                            </div>
+                            <v-card>
+                                <v-card-text>
+                                    <travel-uploader :article-id="$route.params.article_id" :version="content.versionId" :preview="true"></travel-uploader>
+                                </v-card-text>
+                            </v-card>
+                        </v-expansion-panel-content>
                         <v-expansion-panel-content v-model="expand.preview" v-if="content.type === 'content'">
                             <div slot="header">Article Preview</div>
                             <v-card>
@@ -104,6 +114,16 @@
                                     <v-btn flat v-if="content.type === 'link'" :href="content.url" target="_blank">Visit External Link</v-btn>
                                     <v-btn flat v-if="content.type === 'content'">View Article</v-btn>
                                 </v-card-actions>
+                            </v-card>
+                        </v-expansion-panel-content>
+                        <v-expansion-panel-content v-if="content.type === 'content'">
+                            <div slot="header">
+                                Uploads
+                            </div>
+                            <v-card>
+                                <v-card-text>
+                                    <travel-uploader :article-id="$route.params.article_id" :version="content.versionId" :preview="true"></travel-uploader>
+                                </v-card-text>
                             </v-card>
                         </v-expansion-panel-content>
                         <v-expansion-panel-content v-model="expand.preview" v-if="content.type === 'content'">

@@ -49,29 +49,32 @@
                            :loading="props.item.status === 'downloading'"
                            @click="doDownload({ id: props.item.id })"
                     ><v-icon>file_download</v-icon></v-btn>
-                    <v-btn flat icon color="red" v-if="props.item.status === 'upload-failed'" @click="doUpload({ id: props.item.id })"><v-icon>refresh</v-icon></v-btn>
-                    <v-btn flat icon color="grey" v-if="props.item.status === 'uploaded'" @click.stop="openDialog(props.item.id)"><v-icon>settings</v-icon></v-btn>
+                    <v-btn flat icon color="red" v-if="props.item.status === 'upload-failed' && !preview" @click="doUpload({ id: props.item.id })"><v-icon>refresh</v-icon></v-btn>
+                    <v-btn flat icon color="grey" v-if="props.item.status === 'uploaded' && !preview" @click.stop="openDialog(props.item.id)"><v-icon>settings</v-icon></v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
                             flat icon color="grey"
-                            v-if="props.item.status === 'uploaded' || props.item.status === 'delete-failed' || props.item.status === 'deleting'"
+                            v-if="!preview && (props.item.status === 'uploaded' || props.item.status === 'delete-failed' || props.item.status === 'deleting')"
                             :loading="props.item.status === 'deleting'"
                             @click="doDelete({ id: props.item.id })"
                     ><v-icon>delete_forever</v-icon></v-btn>
                     <v-btn
                             flat icon color="grey"
-                            v-if="props.item.status === 'upload-failed' || props.item.status === 'new'"
+                            v-if="!preview && (props.item.status === 'upload-failed' || props.item.status === 'new')"
                             :loading="props.item.status === 'deleting'"
                             @click="localDelete({ id: props.item.id })"
                     ><v-icon>delete_forever</v-icon></v-btn>
                 </td>
+                <td>
+                    <v-chip color="orange" text-color="white" v-if="props.item.custom_properties && props.item.custom_properties.internal">Internal Only</v-chip>
+                </td>
             </template>
         </v-data-table>
-        <v-layout row>
+        <v-layout row v-if="!preview">
             <v-spacer></v-spacer>
             <v-btn flat icon color="green" @click.stop="$refs.upload.click()" :loading="massUploading"><v-icon>add_circle</v-icon></v-btn>
         </v-layout>
-        <input type="file" v-show="false" ref="upload" @change="uploadFiles" accept="application/pdf">
+        <input type="file" v-show="false" ref="upload" @change="uploadFiles" accept="application/pdf" v-if="!preview">
     </div>
 </template>
 
@@ -80,6 +83,7 @@
     import MessageBus from 'Travel/components/MessageBus'
 
     export default {
+        props: ['preview'],
         data () {
             return {
                 headers: [
@@ -105,7 +109,13 @@
                         text: 'Actions',
                         value: null,
                         sortable: false,
-                        width: '55%'
+                        width: '45%'
+                    },
+                    {
+                        text: 'Flags',
+                        value: null,
+                        sortable: false,
+                        width: '10%'
                     }
                 ],
                 propertiesDialog: false

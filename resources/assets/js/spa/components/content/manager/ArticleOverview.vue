@@ -67,7 +67,7 @@
                                     <!-- Review -->
                                     <!--<v-btn flat icon color="grey"><v-icon>mode_comment</v-icon></v-btn>-->
                                     <!-- Retire / Abandon -->
-                                    <v-btn flat icon color="grey" @click="archiveVersion(props.item.version)" v-if="props.item.status === 'editing'"><v-icon>archive</v-icon></v-btn>
+                                    <v-btn flat icon color="grey" @click="archiveVersion(props.item.version)" v-if="user.id === props.item.author.id && props.item.status === 'editing'"><v-icon>archive</v-icon></v-btn>
                                     <!-- Publish -->
                                     <!--<v-btn flat icon color="grey"><v-icon>cloud_upload</v-icon></v-btn>-->
                                     <!-- View -->
