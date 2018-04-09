@@ -10,9 +10,9 @@
                     <v-text-field
                             label="Current Password"
                             v-model="currentPassword"
-                            :type="revealCurrentPassword ? 'password' : 'text'"
-                            :append-icon="revealCurrentPassword ? 'visibility' : 'visibility_off'"
-                            :append-icon-cb="() => (revealCurrentPassword = !revealCurrentPassword)"
+                            :type="revealPasswords ? 'password' : 'text'"
+                            :append-icon="revealPasswords ? 'visibility' : 'visibility_off'"
+                            :append-icon-cb="() => (revealPasswords = !revealPasswords)"
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'current_password')"
                             :disabled="storeSettingsSubmitting"
                     ></v-text-field>
@@ -22,9 +22,9 @@
                             hint="At least 8 characters"
                             min="8"
                             counter
-                            :type="revealPassword ? 'password' : 'text'"
-                            :append-icon="revealPassword ? 'visibility' : 'visibility_off'"
-                            :append-icon-cb="() => (revealPassword = !revealPassword)"
+                            :type="revealPasswords ? 'password' : 'text'"
+                            :append-icon="revealPasswords ? 'visibility' : 'visibility_off'"
+                            :append-icon-cb="() => (revealPasswords = !revealPasswords)"
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'password')"
                             :disabled="storeSettingsSubmitting"
                     ></v-text-field>
@@ -33,9 +33,9 @@
                             v-model="passwordConfirmation"
                             counter
                             type="password"
-                            :type="revealConfirmation ? 'password' : 'text'"
-                            :append-icon="revealConfirmation ? 'visibility' : 'visibility_off'"
-                            :append-icon-cb="() => (revealConfirmation = !revealConfirmation)"
+                            :type="revealPasswords ? 'password' : 'text'"
+                            :append-icon="revealPasswords ? 'visibility' : 'visibility_off'"
+                            :append-icon-cb="() => (revealPasswords = !revealPasswords)"
                             :error-messages="fieldErrors(storeSettingsFormUuid, 'password_confirmation')"
                             :disabled="storeSettingsSubmitting"
                     ></v-text-field>
@@ -121,9 +121,7 @@
                 rightDrawer: false,
                 title: 'AgentRef',
                 settingsDialog: false,
-                revealPassword: true,
-                revealConfirmation: true,
-                revealCurrentPassword: true
+                revealPasswords: true
             }
         },
         methods: {
@@ -149,9 +147,7 @@
                 this.updatePasswordConfirmation({ password_confirmation: null })
                 this.updateCurrentPassword({ current_password: null })
                 this.settingsDialog = false
-                this.revealPassword = true
-                this.revealConfirmation = true
-                this.revealCurrentPassword = true
+                this.revealPasswords = true
             }
         },
         computed: {
