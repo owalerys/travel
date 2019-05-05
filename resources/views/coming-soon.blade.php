@@ -36,7 +36,7 @@
                     <h1 class="mb-3">Agentref.com</h1>
                     <h2 class="mb-4">Coming soon!</h2>
                     <p class="mb-5">We're working hard to bring you something awesome! We're coming to you live in
-                        <strong>April 2018</strong>!</p>
+                        <strong>September 2019</strong>!</p>
                     <!-- <div class="input-group input-group-newsletter">
                       <input type="email" class="form-control" placeholder="Enter email..." aria-label="Enter email..." aria-describedby="basic-addon">
                       <div class="input-group-append">
